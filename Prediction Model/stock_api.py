@@ -1,18 +1,20 @@
 from datetime import datetime
 import pandas as pd
 import yfinance as yf
-import sys
 
-company_list = ["TSLA", "GM", "F"]
-end = datetime.now()
-start = datetime(datetime.year,(datetime.month - 1), datetime.day)
+#Data downloader from Yahoo Finance that returns a dictionary to be used.
+def DownloadData():
+    stock_ticker = ["TSLA", "GM", "F"]
+    stock_data = {}
 
-stock = yf.download("TSLA", start=start, end=end,interval="1h")
+    #Start and end times for the download parameters for Yahoo Finance API
+    end = datetime.now()
+    start = datetime(datetime.now().year, int(end.month)-6 , datetime.now().day)
 
-df = pd.DataFrame(stock)
-print(df.tail(10))
+    #Download each ticker and add the daily change of each hour and return it to a dictionary
+    for ticker in stock_ticker:
+        data = yf.download(ticker, start=start, end=end, interval='1h')
+        data['Daily Change'] = data['Close'].diff()
+        stock_data[ticker] = data
 
-print(sys.getsizeof(stock) / 1024)
-print(df.index.size)
-
-
+    return stock_data
