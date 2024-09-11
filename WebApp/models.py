@@ -1,1 +1,1 @@
-#Used for database models from PostgreSQL
+#Used for database models from PostgreSQL and others
