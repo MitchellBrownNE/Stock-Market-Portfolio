@@ -1,20 +1,52 @@
 from datetime import datetime
 import pandas as pd
 import yfinance as yf
+import sys
+
+class StockStats:
+    def __init__(self, ticker, datetime, open, high, low, close, adjclose, volume, hourlychange):
+        self.ticker = ticker
+        self.datetime = datetime
+        self.open = open
+        self.high = high
+        self.low = low
+        self.close = close
+        self.adjclose = adjclose
+        self.volume = volume
+        self.hourlychange = hourlychange
 
 #Data downloader from Yahoo Finance that returns a dictionary to be used.
-def DownloadData():
+def DownloadData() -> StockStats:
     stock_ticker = ["TSLA", "GM", "F"]
-    stock_data = {}
+    stock_stats = []
 
     #Start and end times for the download parameters for Yahoo Finance API
     end = datetime.now()
     start = datetime(datetime.now().year, int(end.month)-6 , datetime.now().day)
 
+        
     #Download each ticker and add the daily change of each hour and return it to a dictionary
     for ticker in stock_ticker:
         data = yf.download(ticker, start=start, end=end, interval='1h')
         data['Daily Change'] = data['Close'].diff()
-        stock_data[ticker] = data
 
-    return stock_data
+        #Removal of datetime index and change it to a column and convert it to string
+        data.reset_index(inplace=True)
+        data['Datetime'] = data["Datetime"].dt.strftime('%Y-%m-%d %H:%M:%S')
+
+        
+    #
+    #for row in data.iterrows():
+        stock_stats.append(StockStats(ticker=ticker, datetime=data['Datetime'], open=data['Open'], high=data['High'], low=data['Low'], close=data['Close'], adjclose=data['Adj Close'], volume=data['Volume'], hourlychange=data['Daily Change']))
+
+    return stock_stats
+            
+
+if __name__ == '__main__':
+    data = DownloadData()
+
+    print(data[1].ticker)
+
+    for company in data:
+        print(company.ticker)
+    
