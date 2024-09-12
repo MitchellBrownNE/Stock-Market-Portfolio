@@ -1,10 +1,20 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>My Website</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Data</title>
 </head>
 <body>
-    <h1>Welcome to My Website</h1>
-    <p>This is the homepage of my website.</p>
+    <h1>Stock Data</h1>
+    <ul>
+        {% for stock in data %}
+            <li>
+                <strong>Ticker:</strong> {{ stock.ticker }}<br>
+                <strong>Datetime:</strong> {{ stock.datetime }}<br>
+                <strong>Close:</strong> {{ stock.close }}
+            </li>
+        {% endfor %}
+    </ul>
 </body>
 </html>

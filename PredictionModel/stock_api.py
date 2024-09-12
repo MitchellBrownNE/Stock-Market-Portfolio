@@ -1,8 +1,7 @@
 from datetime import datetime
-import pandas as pd
 import yfinance as yf
-import sys
 
+#StockStats class helps modularize each hour of stocks and allows for easy transfer to the LSTM model.
 class StockStats:
     def __init__(self, ticker, datetime, open, high, low, close, adjclose, volume, hourlychange):
         self.ticker = ticker
@@ -17,10 +16,11 @@ class StockStats:
 
 #Data downloader from Yahoo Finance that returns a dictionary to be used.
 def DownloadData() -> StockStats:
+    #Stocks to use within portfolio.
     stock_ticker = ["TSLA", "GM", "F"]
     stock_stats = []
 
-    #Start and end times for the download parameters for Yahoo Finance API
+    #Start and end times for the download parameters for Yahoo Finance API can be adjusted accordingly.
     end = datetime.now()
     start = datetime(datetime.now().year, int(end.month)-6 , datetime.now().day)
 
@@ -35,18 +35,8 @@ def DownloadData() -> StockStats:
         data['Datetime'] = data["Datetime"].dt.strftime('%Y-%m-%d %H:%M:%S')
 
         
-    #
-    #for row in data.iterrows():
-        stock_stats.append(StockStats(ticker=ticker, datetime=data['Datetime'], open=data['Open'], high=data['High'], low=data['Low'], close=data['Close'], adjclose=data['Adj Close'], volume=data['Volume'], hourlychange=data['Daily Change']))
+        #Loop to iterate through each row within the pandas dataframe to create a list of objects
+        for row in data.iterrows():
+            stock_stats.append(StockStats(ticker=ticker, datetime=data['Datetime'], open=data['Open'], high=data['High'], low=data['Low'], close=data['Close'], adjclose=data['Adj Close'], volume=data['Volume'], hourlychange=data['Daily Change']))
 
     return stock_stats
-            
-
-if __name__ == '__main__':
-    data = DownloadData()
-
-    print(data[1].ticker)
-
-    for company in data:
-        print(company.ticker)
-    
