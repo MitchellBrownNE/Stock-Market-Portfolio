@@ -1,5 +1,2 @@
-import stock_api as api
+import keras as keras
 
-data = api.DownloadData()
-
-print(len(data))

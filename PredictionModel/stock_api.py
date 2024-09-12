@@ -35,7 +35,7 @@ def DownloadData() -> StockStats:
         data['Datetime'] = data["Datetime"].dt.strftime('%Y-%m-%d %H:%M:%S')
 
         
-        #Loop to iterate through each row within the pandas dataframe to create a list of objects
+        #Loop to iterate through each row within the pandas data frame to create a list of objects
         for row in data.iterrows():
             stock_stats.append(StockStats(ticker=ticker, datetime=data['Datetime'], open=data['Open'], high=data['High'], low=data['Low'], close=data['Close'], adjclose=data['Adj Close'], volume=data['Volume'], hourlychange=data['Daily Change']))
 
