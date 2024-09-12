@@ -1,5 +1,8 @@
 from datetime import datetime
 import yfinance as yf
+import logging
+
+logging.basicConfig(level=logging.DEBUG)
 
 #StockStats class helps modularize each hour of stocks and allows for easy transfer to the LSTM model.
 class StockStats:
@@ -24,7 +27,8 @@ def DownloadData() -> StockStats:
     end = datetime.now()
     start = datetime(datetime.now().year, int(end.month)-6 , datetime.now().day)
 
-        
+    logging.debug("Download started!")
+
     #Download each ticker and add the daily change of each hour and return it to a dictionary
     for ticker in stock_ticker:
         data = yf.download(ticker, start=start, end=end, interval='1h')
@@ -36,7 +40,8 @@ def DownloadData() -> StockStats:
 
         
         #Loop to iterate through each row within the pandas data frame to create a list of objects
-        for row in data.iterrows():
+        for row in data.head(5).iterrows():
             stock_stats.append(StockStats(ticker=ticker, datetime=data['Datetime'], open=data['Open'], high=data['High'], low=data['Low'], close=data['Close'], adjclose=data['Adj Close'], volume=data['Volume'], hourlychange=data['Daily Change']))
 
+    logging.debug("Download finished!")
     return stock_stats
