@@ -1,2 +1,2 @@
 buildCommand: npm run build
-publishDir: build
+publishDir: Frontend/build
