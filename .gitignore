@@ -1,3 +1,37 @@
+# dependencies
+Frontend/stockmarket/node_modules
+Frontend/stockmarket/.pnp
+.pnp.js
+
+# testing
+Frontend/stockmarket/coverage
+
+# production
+Frontend/stockmarket/build
+
+# misc
+.DS_Store
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Python specific ignores
 Virtual/
 .venv/
-/Backend/PredictionMode/__pycache__
+Backend/PredictionModel/__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.db
+*.sqlite3
+*.log
+
+# Other common ignores
+.idea/
+.vscode/
+*.swp
