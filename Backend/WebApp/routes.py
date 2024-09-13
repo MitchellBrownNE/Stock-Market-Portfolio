@@ -1,8 +1,8 @@
 from WebApp import app
-from flask import send_from_directory
+from flask import send_from_directory, jsonify
 import os
 
-#Route any of the webpages here, example page set in templates
+# Serve React App
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
 def serve(path):
