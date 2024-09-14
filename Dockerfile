@@ -4,8 +4,8 @@ FROM node:14 AS build
 WORKDIR /app
 
 # Copy the frontend code
-COPY Frontend/package.json ./
-COPY Frontend/ ./
+COPY Frontend/profitpulsex/package.json ./
+COPY Frontend/profitpulsex ./
 
 # Install dependencies and build the React app
 RUN npm install
@@ -23,7 +23,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY Backend/ /app/Backend
 
 # Copy the built React app from the previous stage
-COPY --from=build /app/build /app/Frontend/build
+COPY --from=build /app/dist /app/Frontend/profitpulsex/dist
 
 # Set environment variables
 ENV FLASK_APP=Backend/WebApp/app.py
