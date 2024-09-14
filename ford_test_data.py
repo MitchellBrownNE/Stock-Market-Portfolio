@@ -7,4 +7,4 @@ ticker = 'F'
 stock_data = yf.download(ticker, start='2020-01-01', end='2023-12-31')
 
 # Saves the information into a spreadsheet
-stock_data.to_csv('ford_historical_data.csv')
+stock_data.to_csv('historical_stock_data.csv')
