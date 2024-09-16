@@ -8,8 +8,6 @@ COPY frontend/profitpulsex/package.json ./package.json
 COPY frontend/profitpulsex/vite.config.js ./vite.config.js
 COPY frontend/profitpulsex/ ./
 
-
-RUN ls -la /app
 # Install dependencies and build the React app
 RUN npm install
 RUN npm run build
@@ -24,6 +22,9 @@ COPY Backend/ /app/Backend
 
 # Copy the built React app from the previous stage
 COPY --from=build /app/dist /app/Frontend/profitpulsex/dist
+
+RUN echo "Contents of /app/Frontend/profitpulsex/dist after copying built frontend:" && ls -la /app/Frontend/profitpulsex/dist
+
 
 # Copy the requirements file and install dependencies
 COPY requirements.txt ./
