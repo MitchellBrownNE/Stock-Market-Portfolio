@@ -4,7 +4,7 @@ FROM node:14 AS build
 WORKDIR /app
 
 RUN ls -la /app
-RUN ls -d */
+RUN ls -d /app
 # Copy the frontend code
 
 # Install dependencies and build the React app
