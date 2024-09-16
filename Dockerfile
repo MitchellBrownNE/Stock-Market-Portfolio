@@ -4,7 +4,8 @@ FROM node:14 AS build
 WORKDIR /app
 
 # Copy the frontend code
-COPY Frontend/ ./
+COPY Backend/ /app/Backend
+COPY Frontend/ app/Frontend
 
 
 # Install dependencies and build the React app
