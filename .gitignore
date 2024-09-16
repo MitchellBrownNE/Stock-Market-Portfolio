@@ -1,5 +1,5 @@
 #Frontend
-Frontend/profitpulsex/node_modules
+frontend/profitpulsex/node_modules
 .pnp.js
 Frontend/coverage
 .DS_Store
@@ -10,6 +10,7 @@ Frontend/coverage
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+/frontend/profitpulsex/.env
 
 #Backend
 Virtual/
