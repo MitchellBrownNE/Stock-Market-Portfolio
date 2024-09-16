@@ -1,8 +1,5 @@
 import os
 from flask import Flask, send_from_directory
-from dotenv import load_dotenv
-
-load_dotenv()
 
 app = Flask(__name__, static_folder=os.path.join(os.getcwd(), 'Frontend/profitpulsex/dist'), static_url_path='')
 
