@@ -4,7 +4,7 @@ FROM node:14 AS build
 WORKDIR /app
 
 # Copy the frontend code
-COPY Frontend/profitpulsex/package.json ./
+COPY Frontend/profitpulsex/package.json ./package.json
 COPY Frontend/profitpulsex ./
 
 # Install dependencies and build the React app
