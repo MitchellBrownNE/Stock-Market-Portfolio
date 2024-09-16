@@ -1,5 +1,5 @@
 from WebApp import app
-from flask import send_from_directory, jsonify
+from flask import send_from_directory
 import os
 from PredictionModel import stock_api as API
 
