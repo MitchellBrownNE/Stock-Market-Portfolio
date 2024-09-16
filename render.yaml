@@ -1,2 +1,2 @@
 buildCommand: npm run build
-publishDir: Frontend/profitpulsex/dist
+publishDir: Frontend/profitpulsex
