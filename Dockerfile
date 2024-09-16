@@ -4,10 +4,12 @@ FROM node:14 AS build
 WORKDIR /app
 
 # Copy the frontend code
-COPY Backend/ /app/Backend
-COPY Frontend/ app/Frontend
+COPY frontend/profitpulsex/package.json ./package.json
+COPY frontend/profitpulsex/vite.config.js ./vite.config.js
+COPY frontend/profitpulsex/ ./
 
 
+RUN ls -la /app
 # Install dependencies and build the React app
 RUN npm install
 RUN npm run build
