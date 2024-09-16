@@ -29,9 +29,6 @@ COPY --from=build /app/dist /app/Frontend/profitpulsex/dist
 COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Firebase authentication key
-COPY path/to/your/serviceAccountKey.json /app/serviceAccountKey.json
-
 # Set environment variables
 ENV FLASK_APP=Backend/WebApp/app.py
 ENV FLASK_RUN_HOST=0.0.0.0
