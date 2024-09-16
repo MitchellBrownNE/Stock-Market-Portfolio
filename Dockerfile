@@ -5,7 +5,8 @@ WORKDIR /app
 
 # Copy the frontend code
 COPY Frontend/profitpulsex/package.json ./package.json
-COPY Frontend/profitpulsex ./
+COPY Frontend/profitpulsex/vite.config.js ./vite.config.js
+COPY Frontend/profitpulsex/ ./
 
 # Install dependencies and build the React app
 RUN npm install
