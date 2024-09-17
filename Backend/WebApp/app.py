@@ -1,4 +1,4 @@
-from flask import Flask, send_from_directory
+from flask import Flask, send_from_directory, jsonify
 import os
 
 # Adjust the path to the static folder based on the main directory on Render
@@ -30,6 +30,12 @@ def ignore_favicon():
 @app.errorhandler(404)
 def not_found(e):
     return send_from_directory(app.static_folder, 'index.html')
+
+# Debugging route to list the contents of the root directory
+@app.route('/debug/list-root')
+def list_root():
+    root_contents = os.listdir('/')
+    return jsonify(root_contents)
 
 # Run the Flask application
 if __name__ == '__main__':
