@@ -2,7 +2,7 @@ from flask import Flask, send_from_directory
 import os
 
 # Initialize the Flask application
-app = Flask(__name__, static_url_path='', static_folder=os.path.join(os.path.dirname(__file__), '../../frontend/profitpulsex/dist'))
+app = Flask(__name__, static_url_path='', static_folder= '/frontend/profitpulsex/dist'))
 
 # Serve the React app
 @app.route('/', defaults={'path': ''})
