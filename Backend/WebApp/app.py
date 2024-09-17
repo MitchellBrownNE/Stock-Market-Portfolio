@@ -2,7 +2,15 @@ from flask import Flask, send_from_directory
 import os
 
 # Initialize the Flask application
-app = Flask(__name__, static_url_path='', static_folder= '/frontend/profitpulsex/dist'))
+app = Flask(__name__, static_url_path='', static_folder= '/frontend/profitpulsex/dist')
+
+static_folder_path = os.path.join(os.path.dirname(__file__), '../frontend/profitpulsex/dist')
+print(f"Static folder path: {static_folder_path}")
+if not os.path.exists(static_folder_path):
+    print("The static folder path does not exist.")
+else:
+    print("The static folder path exists.")
+
 
 # Serve the React app
 @app.route('/', defaults={'path': ''})
