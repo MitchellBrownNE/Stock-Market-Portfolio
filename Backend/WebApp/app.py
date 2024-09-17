@@ -10,7 +10,7 @@ else:
     print("The static folder path exists.")
 
 # Print the contents of the /app directory for debugging
-app_folder_contents = os.listdir('/app')
+app_folder_contents = os.listdir('/app/Frontend')
 print("App directory contents:")
 for item in app_folder_contents:
     print(item)
