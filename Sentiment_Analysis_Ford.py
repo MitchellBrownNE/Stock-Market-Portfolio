@@ -2,11 +2,10 @@ import feedparser
 from transformers import pipeline
 import psycopg2
 import time
-from datetime import datetime
 
 # Set ticker and keyword
-ticker = 'F'
-keyword = 'ford'
+ticker = 'NVDA'
+keyword = 'NVIDIA'
 
 # Initialize pipeline
 pipe = pipeline("text-classification", model="ProsusAI/finbert")
@@ -88,21 +87,12 @@ def analyze_feed():
     else:
         print("No articles matched the keyword.")
 
-# Main loop for scheduled sentiment analysis
+# Main loop for continuous sentiment analysis
 try:
     while True:
-        current_time = datetime.now()
-        
-        # Check if current time is between 9 AM and 5 PM
-        if 9 <= current_time.hour < 17 and current_time.minute == 0:
-            print("Fetching new articles and analyzing sentiment...\n")
-            analyze_feed()
-            print("\nWaiting for the next update...\n")
-
-            # Sleep for 1 hour to wait for the next analysis time
-            time.sleep(3600)  # Sleep for 3600 seconds (1 hour)
-        else:
-            # Sleep for a short while to avoid busy-waiting
-            time.sleep(10)  # Check every 10 seconds
+        print("Fetching new articles and analyzing sentiment...\n")
+        analyze_feed()
+        print("\nWaiting for the next update...\n")
+        time.sleep(60)  # Wait for 60 seconds before checking again
 except KeyboardInterrupt:
     print("\nSentiment analysis stopped.")
