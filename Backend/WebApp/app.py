@@ -9,6 +9,12 @@ if not os.path.exists(static_folder_path):
 else:
     print("The static folder path exists.")
 
+# Print the contents of the root directory for debugging
+root_contents = os.listdir('/')
+print("Root directory contents:")
+for item in root_contents:
+    print(item)
+
 # Initialize the Flask application
 app = Flask(__name__, static_url_path='', static_folder=static_folder_path)
 
@@ -30,16 +36,6 @@ def ignore_favicon():
 @app.errorhandler(404)
 def not_found(e):
     return send_from_directory(app.static_folder, 'index.html')
-
-# Debugging route to print the contents of the root directory
-@app.route('/debug/list-root')
-def list_root():
-    root_contents = os.listdir('/')
-    print("Root directory contents:")
-    for item in root_contents:
-        print(item)
-    return '', 204  # Return 204 No Content to avoid any response issues
-
 
 # Run the Flask application
 if __name__ == '__main__':
