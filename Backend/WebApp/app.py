@@ -9,10 +9,22 @@ if not os.path.exists(static_folder_path):
 else:
     print("The static folder path exists.")
 
+# Print the contents of the /app directory for debugging
+app_folder_contents = os.listdir('/app')
+print("App directory contents:")
+for item in app_folder_contents:
+    print(item)
+
 # Print the contents of the root directory for debugging
-root_contents = os.listdir('/')
+root_contents = os.listdir('/root/')
 print("Root directory contents:")
 for item in root_contents:
+    print(item)
+
+# Print the contents of the static folder for debugging
+static_folder_contents = os.listdir(static_folder_path)
+print("Static folder contents:")
+for item in static_folder_contents:
     print(item)
 
 # Initialize the Flask application
