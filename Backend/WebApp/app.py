@@ -3,29 +3,6 @@ import os
 
 # Adjust the path to the static folder based on the main directory on Render
 static_folder_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../Frontend/profitpulsex/dist'))
-print(f"Static folder path: {static_folder_path}")
-if not os.path.exists(static_folder_path):
-    print("The static folder path does not exist.")
-else:
-    print("The static folder path exists.")
-
-# Print the contents of the /app directory for debugging
-app_folder_contents = os.listdir('/app/Frontend')
-print("App directory contents:")
-for item in app_folder_contents:
-    print(item)
-
-# Print the contents of the root directory for debugging
-root_contents = os.listdir('/root/')
-print("Root directory contents:")
-for item in root_contents:
-    print(item)
-
-# Print the contents of the static folder for debugging
-static_folder_contents = os.listdir(static_folder_path)
-print("Static folder contents:")
-for item in static_folder_contents:
-    print(item)
 
 # Initialize the Flask application
 app = Flask(__name__, static_url_path='', static_folder=static_folder_path)
