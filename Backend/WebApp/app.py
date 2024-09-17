@@ -13,6 +13,11 @@ def serve(path):
     else:
         return send_from_directory(app.static_folder, 'index.html')
 
+# Ignore favicon requests by returning a 204 No Content response
+@app.route('/favicon.ico')
+def ignore_favicon():
+    return '', 204  # 204 No Content
+
 # Handle 404 errors by serving the React app's index.html
 @app.errorhandler(404)
 def not_found(e):
