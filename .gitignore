@@ -1,5 +1,5 @@
 #Frontend
-frontend/profitpulsex/node_modules
+node_modules
 .pnp.js
 Frontend/coverage
 .DS_Store

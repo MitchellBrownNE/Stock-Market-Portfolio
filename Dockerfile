@@ -10,7 +10,7 @@ COPY frontend/profitpulsex/ ./
 
 # Install dependencies and build the React app
 RUN npm install
-RUN npm run build
+RUN vite build
 
 # Stage 2: Set up Flask app
 FROM python:3.11.9-slim
@@ -22,7 +22,6 @@ COPY Backend/ /app/Backend
 
 # Copy the built React app from the previous stage
 COPY --from=build /app /app/Frontend/profitpulsex
-
 
 # Copy the requirements file and install dependencies
 COPY requirements.txt ./
