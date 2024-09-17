@@ -10,7 +10,7 @@ COPY frontend/profitpulsex/ ./
 
 # Install dependencies and build the React app
 RUN npm install
-RUN vite build
+RUN npx vite build
 
 # Stage 2: Set up Flask app
 FROM python:3.11.9-slim
