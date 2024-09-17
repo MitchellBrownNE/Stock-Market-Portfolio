@@ -2,7 +2,7 @@ from flask import Flask, send_from_directory, jsonify
 import os
 
 # Adjust the path to the static folder based on the main directory on Render
-static_folder_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../frontend/profitpulsex/dist'))
+static_folder_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../Frontend/profitpulsex/dist'))
 print(f"Static folder path: {static_folder_path}")
 if not os.path.exists(static_folder_path):
     print("The static folder path does not exist.")
