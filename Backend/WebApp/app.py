@@ -31,11 +31,15 @@ def ignore_favicon():
 def not_found(e):
     return send_from_directory(app.static_folder, 'index.html')
 
-# Debugging route to list the contents of the root directory
+# Debugging route to print the contents of the root directory
 @app.route('/debug/list-root')
 def list_root():
     root_contents = os.listdir('/')
-    return jsonify(root_contents)
+    print("Root directory contents:")
+    for item in root_contents:
+        print(item)
+    return '', 204  # Return 204 No Content to avoid any response issues
+
 
 # Run the Flask application
 if __name__ == '__main__':
