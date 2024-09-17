@@ -1,5 +1,23 @@
-from WebApp import app
+from flask import Flask, send_from_directory
+import os
 
-#Used to run the app
+# Initialize the Flask application
+app = Flask(__name__, static_url_path='', static_folder=os.path.join(os.path.dirname(__file__), '../../frontend/profitpulsex/dist'))
+
+# Serve the React app
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>')
+def serve(path):
+    if path != "" and os.path.exists(os.path.join(app.static_folder, path)):
+        return send_from_directory(app.static_folder, path)
+    else:
+        return send_from_directory(app.static_folder, 'index.html')
+
+# Handle 404 errors by serving the React app's index.html
+@app.errorhandler(404)
+def not_found(e):
+    return send_from_directory(app.static_folder, 'index.html')
+
+# Run the Flask application
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True, host='0.0.0.0', port=5000)
