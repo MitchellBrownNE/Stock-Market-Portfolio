@@ -1,2 +1,5 @@
+import stock_api
 
-import pandas as pd
+data = stock_api.DownloadData()
+
+print(data)
