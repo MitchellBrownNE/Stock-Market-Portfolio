@@ -11,6 +11,11 @@ function Register() {
 
   const registerUser = async () => {
     try {
+      if (password !== confirmPassword) {
+        setMessage("Passwords do not match. Please try again.");
+        return;
+      }
+
       // firebase function to create user with email and password
       const userCredential = await createUserWithEmailAndPassword(
         auth,
@@ -60,7 +65,7 @@ function Register() {
         >
           Register
         </button>
-        <p>{message}</p>
+        <p className="text-white font-body mt-5">{message}</p>
       </div>
     </div>
   );
