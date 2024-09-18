@@ -6,6 +6,7 @@ function Register() {
   // useState hook for updating state of email, password, and message
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [message, setMessage] = useState("");
 
   const registerUser = async () => {
@@ -28,8 +29,8 @@ function Register() {
 
   return (
     <div className="min-h-screen bg-bgdark flex flex-col justify-center items-center">
-      <div className="text-xl font-heading mt-10">
-        <div className="text-white">Register Page</div>
+      <div className="text-3xl font-heading mt-10">
+        <div className="text-white">Register</div>
       </div>
       <div className="flex flex-col justify-center items-center mt-10">
         <input
@@ -46,8 +47,15 @@ function Register() {
           placeholder="Password"
           className="p-2 border border-gray-300 rounded w-80 mt-5"
         />
+        <input
+          type="password"
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+          placeholder="Confirm Password"
+          className="p-2 border border-gray-300 rounded w-80 mt-5"
+        />
         <button
-          className="bg-lightgreen font-body text-white px-6 py-2 rounded-lg hover:bg-blue-600 focus:outline-none mt-5"
+          className="bg-lightgreen font-body text-white px-6 py-2 rounded-lg hover:bg-blue-600 focus:outline-none mt-10"
           onClick={registerUser}
         >
           Register
