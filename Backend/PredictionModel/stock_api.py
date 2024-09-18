@@ -1,5 +1,8 @@
 from datetime import datetime
 import yfinance as yf
+from flask import jsonify
+import io
+import json
 
 #StockStats class helps modularize each hour of stocks and allows for easy transfer to the LSTM model.
 class StockStats:
@@ -13,6 +16,19 @@ class StockStats:
         self.adjclose = adjclose
         self.volume = volume
         self.hourlychange = hourlychange
+
+    def to_dict(self):
+        return {
+            'ticker': self.ticker,
+            'datetime': self.datetime,
+            'open': self.open,
+            'high': self.high,
+            'low': self.low,
+            'close': self.close,
+            'adjclose': self.adjclose,
+            'volume': self.volume,
+            'hourlychange': self.hourlychange
+        }
 
 #Data downloader from Yahoo Finance that returns a dictionary to be used.
 def DownloadData() -> StockStats:
@@ -35,7 +51,18 @@ def DownloadData() -> StockStats:
 
         
         #Loop to iterate through each row within the pandas data frame to create a list of objects
-        for row in data.head(5).iterrows():
+        for _, row in data.head(5).iterrows():
             stock_stats.append(StockStats(ticker=ticker, datetime=data['Datetime'], open=data['Open'], high=data['High'], low=data['Low'], close=data['Close'], adjclose=data['Adj Close'], volume=data['Volume'], hourlychange=data['Daily Change']))
 
     return stock_stats
+
+def JsonifyData():
+
+    #Download sorted data, and then turn it into a json file. 
+    stock_objects = DownloadData()
+    stock_dicts = [stock.to_dict() for stock in stock_objects]
+    return jsonify(stock_dicts)
+
+
+if __name__ == '__main__':
+    print(JsonifyData())

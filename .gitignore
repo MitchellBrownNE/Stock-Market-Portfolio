@@ -16,6 +16,7 @@ yarn-error.log*
 Virtual/
 .venv/
 Backend/PredictionModel/__pycache__/
+Backend/WebApp/__pycache__/
 *.pyc
 *.pyo
 *.pyd
