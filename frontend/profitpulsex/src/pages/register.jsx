@@ -3,7 +3,7 @@ import { auth } from "../firebaseConfig";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 
 function Register() {
-  // useState hook for updating state of email, password, and error message
+  // useState hook for updating state of email, password, and message
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
@@ -27,9 +27,9 @@ function Register() {
   };
 
   return (
-    <div>
-      <div className="text-xl font-heading flex flex-col justify-center items-center mt-10">
-        <div className="text-bgdark">Register Page</div>
+    <div className="min-h-screen bg-bgdark flex flex-col justify-center items-center">
+      <div className="text-xl font-heading mt-10">
+        <div className="text-white">Register Page</div>
       </div>
       <div className="flex flex-col justify-center items-center mt-10">
         <input
@@ -37,14 +37,21 @@ function Register() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="Email"
+          className="p-2 border border-gray-300 rounded w-80"
         />
         <input
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           placeholder="Password"
+          className="p-2 border border-gray-300 rounded w-80 mt-5"
         />
-        <button onClick={registerUser}>Register</button>
+        <button
+          className="bg-lightgreen font-body text-white px-6 py-2 rounded-lg hover:bg-blue-600 focus:outline-none mt-5"
+          onClick={registerUser}
+        >
+          Register
+        </button>
         <p>{message}</p>
       </div>
     </div>
