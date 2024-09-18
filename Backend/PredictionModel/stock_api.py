@@ -49,10 +49,14 @@ def DownloadData() -> StockStats:
         data.reset_index(inplace=True)
         data['Datetime'] = data["Datetime"].dt.strftime('%Y-%m-%d %H:%M:%S')
 
+    data.dropna()
+
+    print(data.max())
+
         
         #Loop to iterate through each row within the pandas data frame to create a list of objects
-        for _, row in data.head(5).iterrows():
-            stock_stats.append(StockStats(ticker=ticker, datetime=data['Datetime'], open=data['Open'], high=data['High'], low=data['Low'], close=data['Close'], adjclose=data['Adj Close'], volume=data['Volume'], hourlychange=data['Daily Change']))
+        #for _, row in data.head(5).iterrows():
+            #stock_stats.append(StockStats(ticker=ticker, datetime=data['Datetime'], open=data['Open'], high=data['High'], low=data['Low'], close=data['Close'], adjclose=data['Adj Close'], volume=data['Volume'], hourlychange=data['Daily Change']))
 
     return stock_stats
 
@@ -65,4 +69,4 @@ def JsonifyData():
 
 
 if __name__ == '__main__':
-    print(JsonifyData())
+    DownloadData()
