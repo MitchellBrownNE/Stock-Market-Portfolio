@@ -9,6 +9,20 @@ function Register() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [message, setMessage] = useState("");
 
+  // add custom error codes based on firebase error associated with errorr
+  const errorMessage = (errorCode) => {
+    switch (errorCode) {
+      case "auth/invalid-email":
+        return "The email address is not valid. Please enter a valid email.";
+      case "auth/email-already-in-use":
+        return "This email is already registered. Please use another email or login.";
+      case "auth/weak-password":
+        return "The password is too weak. Password should be at least 6 characters long.";
+      default:
+        return "An unexpected error occurred. Please try again.";
+    }
+  };
+
   const registerUser = async () => {
     try {
       if (password !== confirmPassword) {
@@ -27,8 +41,9 @@ function Register() {
       setMessage(`User with email: ${user.email} successfully registered `);
       console.log("User registered:", user);
     } catch (error) {
-      console.error("Error registering user:", error);
-      setMessage("Error registering user");
+      // set custom error message from errorMessage function
+      const customMessage = errorMessage(error.code);
+      setMessage(customMessage);
     }
   };
 
