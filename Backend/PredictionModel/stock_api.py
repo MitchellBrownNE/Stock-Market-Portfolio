@@ -3,6 +3,7 @@ import yfinance as yf
 
 
 ##THERE MIGHT BE MORE TO ADD
+tickers = ["TSLA", "F", "GM"]
 
 # Stock class that will modularize downloads and allow objects that are pandas dataframes
 class Stock:
@@ -19,7 +20,6 @@ class Stock:
 
 def DownloadData():
     # Define the tickers
-    tickers = ["TSLA", "F", "GM"]
     stock_data = {}
 
     # Start and end times for downloading data
