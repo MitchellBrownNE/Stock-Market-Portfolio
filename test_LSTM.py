@@ -7,19 +7,19 @@ sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
-import yfinance as yf  # Using yfinance for data fetching
+import yfinance as yf  # Replacing pandas_datareader with yfinance
 import datetime as dt
 
 from sklearn.preprocessing import MinMaxScaler
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Dropout, LSTM
-from tensorflow.keras.callbacks import EarlyStopping
 
 # Load Data using yfinance
 company = 'META'
 
-start = dt.datetime(2000, 1, 1)  # Start date
-end = dt.datetime(2024, 9, 19)    # End date for prediction
+# Set the date range for training data
+start = dt.datetime(2000, 1, 1)
+end = dt.datetime(2024, 9, 18)  # End date is September 18, 2024
 
 try:
     data = yf.download(company, start=start, end=end)
@@ -42,27 +42,27 @@ for x in range(prediction_days, len(scaled_data)):
 x_train, y_train = np.array(x_train), np.array(y_train)
 x_train = np.reshape(x_train, (x_train.shape[0], x_train.shape[1], 1))
 
-# Build a stronger Model
+# Build the Model
 model = Sequential()
-model.add(LSTM(units=100, return_sequences=True, input_shape=(x_train.shape[1], 1)))  # Increased units
+
+model.add(LSTM(units=50, return_sequences=True, input_shape=(x_train.shape[1], 1)))
 model.add(Dropout(0.2))
-model.add(LSTM(units=100, return_sequences=True))  # Increased units
+model.add(LSTM(units=50, return_sequences=True))
 model.add(Dropout(0.2))
-model.add(LSTM(units=100))  # Increased units
+model.add(LSTM(units=50))
 model.add(Dropout(0.2))
 model.add(Dense(units=1))  # Prediction of the next closing
 
 model.compile(optimizer='adam', loss='mean_squared_error')
 
-# Early stopping to prevent overfitting
-early_stopping = EarlyStopping(monitor='loss', patience=5)
+# Fit the model with no verbose output
+model.fit(x_train, y_train, epochs=25, batch_size=32, verbose=0)
 
-# Fit the model with increased epochs and early stopping
-model.fit(x_train, y_train, epochs=50, batch_size=32, verbose=0, callbacks=[early_stopping])  # Increased epochs
+''' Test the Model Accuracy on Existing Data'''
 
 # Load Test Data using yfinance
-test_start = dt.datetime(2020, 1, 1)
-test_end = dt.datetime(2024, 9, 19)  # End date for test data
+test_start = dt.datetime(2024, 9, 19)  # Starting the test on the next day after the training data
+test_end = dt.datetime.now()  # Use current date for the end of test data
 
 try:
     test_data = yf.download(company, start=test_start, end=test_end)
@@ -71,7 +71,6 @@ except Exception as e:
 
 actual_prices = test_data['Close'].values
 
-# Combine actual and predicted prices for plotting
 total_dataset = pd.concat((data['Close'], test_data['Close']), axis=0)
 
 model_inputs = total_dataset[len(total_dataset) - len(test_data) - prediction_days:].values
@@ -90,20 +89,13 @@ x_test = np.reshape(x_test, (x_test.shape[0], x_test.shape[1], 1))
 prediction_prices = model.predict(x_test)
 prediction_prices = scaler.inverse_transform(prediction_prices)
 
-# Create a common date range for plotting
-full_date_range = pd.date_range(start=test_start, end=test_end)
-prediction_dates = full_date_range[-len(prediction_prices):]
-
-# Plot the actual and predicted prices
-plt.figure(figsize=(14, 7))  # Set a size for the plot
-plt.plot(full_date_range[:len(actual_prices)], actual_prices, color="black", label=f"Actual {company} Price")
-plt.plot(prediction_dates, prediction_prices, color='green', label=f"Predicted {company} Price")
-plt.title(f"{company} Share Price Prediction")
-plt.xlabel('Date')
+# Plot the test predictions
+plt.plot(actual_prices, color="black", label=f"Actual {company} Price")
+plt.plot(prediction_prices, color='green', label=f"Predicted {company} Price")
+plt.title(f"{company} Share Price")
+plt.xlabel('Time')
 plt.ylabel(f'{company} Share Price')
-plt.xticks(rotation=45)
 plt.legend()
-plt.tight_layout()  # Adjust layout to make room for x-axis labels
 plt.show()
 
 # Predict Next Day
@@ -113,14 +105,10 @@ real_data = np.array(real_data)
 real_data = np.reshape(real_data, (real_data.shape[0], real_data.shape[1], 1))
 
 prediction = model.predict(real_data)
-
-# Reshape prediction to 2D for inverse transformation
 prediction = prediction.reshape(-1, 1)  # Reshape to 2D array (1, 1) before inverse transform
 prediction = scaler.inverse_transform(prediction)
 
-predicted_price = prediction[0][0]
-target_price = 537.95
-
-print(f"Prediction for: {test_end.date() + pd.Timedelta(days=1)}")  # Print prediction date
-print(f"Prediction: {predicted_price}")
-
+# Print prediction date
+prediction_date = dt.datetime(2024, 9, 19)  # Prediction for September 19, 2024
+print(f"Prediction for: {prediction_date.date()}")
+print(f"Prediction: {prediction}")
