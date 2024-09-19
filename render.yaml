@@ -1,0 +1,2 @@
+buildCommand: npx vite build
+publishDir: Frontend/profitpulsex
