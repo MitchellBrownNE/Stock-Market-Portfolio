@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { auth } from "../firebaseConfig";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 
@@ -8,6 +9,9 @@ function Register() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const navigate = useNavigate(); // Initialize the useNavigate hook
 
   // add custom error codes based on each firebase case for denied authenticatioono
   const errorMessage = (errorCode) => {
@@ -25,10 +29,12 @@ function Register() {
 
   // function to register user with firebase authentication
   const registerUser = async () => {
+    setLoading(true);
     try {
       // verify both password are identical - strict inequality
       if (password !== confirmPassword) {
         setMessage("Passwords do not match. Please try again.");
+        setLoading(false);
         return;
       }
 
@@ -42,10 +48,15 @@ function Register() {
 
       setMessage(`User with email: ${user.email} successfully registered `);
       console.log("User registered:", user);
+      setTimeout(() => {
+        navigate("/login");
+      }, 2000);
     } catch (error) {
       // set custom error message from errorMessage function
       const customMessage = errorMessage(error.code);
       setMessage(customMessage);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -81,10 +92,11 @@ function Register() {
         />
         {/* call registerUser when button is clicked*/}
         <button
-          className="bg-lightgreen font-body text-white px-6 py-2 rounded-lg hover:bg-blue-600 focus:outline-none mt-10"
+          className="bg-lightgreen font-body text-white px-6 py-2 rounded-lg hover:bg-green-600 focus:outline-none mt-10"
           onClick={registerUser}
+          disabled={loading}
         >
-          Register
+          {loading ? "Registering..." : "Register"}
         </button>
         <p className="text-white font-body mt-5">{message}</p>
       </div>
