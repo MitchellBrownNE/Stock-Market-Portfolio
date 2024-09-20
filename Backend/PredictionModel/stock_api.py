@@ -60,13 +60,6 @@ def DownloadData() -> StockStats:
 
     return stock_stats
 
-def JsonifyData():
-
-    #Download sorted data, and then turn it into a json file. 
-    stock_objects = DownloadData()
-    stock_dicts = [stock.to_dict() for stock in stock_objects]
-    return jsonify(stock_dicts)
-
 
 if __name__ == '__main__':
     DownloadData()
