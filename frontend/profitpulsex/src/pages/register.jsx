@@ -9,7 +9,7 @@ function Register() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [message, setMessage] = useState("");
 
-  // add custom error codes based on firebase error associated with errorr
+  // add custom error codes based on each firebase case for denied authenticatioono
   const errorMessage = (errorCode) => {
     switch (errorCode) {
       case "auth/invalid-email":
@@ -23,8 +23,10 @@ function Register() {
     }
   };
 
+  // function to register user with firebase authentication
   const registerUser = async () => {
     try {
+      // verify both password are identical - strict inequality
       if (password !== confirmPassword) {
         setMessage("Passwords do not match. Please try again.");
         return;
@@ -52,6 +54,7 @@ function Register() {
       <div className="text-3xl font-heading mt-10">
         <div className="text-white">Register</div>
       </div>
+      {/* Email input -- update setEmail based on event when user interacts with input form */}
       <div className="flex flex-col justify-center items-center mt-10">
         <input
           type="email"
@@ -60,6 +63,7 @@ function Register() {
           placeholder="Email"
           className="p-2 border border-gray-300 rounded w-80"
         />
+        {/* password input */}
         <input
           type="password"
           value={password}
@@ -67,6 +71,7 @@ function Register() {
           placeholder="Password"
           className="p-2 border border-gray-300 rounded w-80 mt-5"
         />
+        {/* confirm password input */}
         <input
           type="password"
           value={confirmPassword}
@@ -74,6 +79,7 @@ function Register() {
           placeholder="Confirm Password"
           className="p-2 border border-gray-300 rounded w-80 mt-5"
         />
+        {/* call registerUser when button is clicked*/}
         <button
           className="bg-lightgreen font-body text-white px-6 py-2 rounded-lg hover:bg-blue-600 focus:outline-none mt-10"
           onClick={registerUser}
