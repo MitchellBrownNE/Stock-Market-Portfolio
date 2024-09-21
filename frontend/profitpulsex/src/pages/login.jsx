@@ -1,8 +1,77 @@
-function login() {
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { auth } from "../firebaseConfig";
+import { signInWithEmailAndPassword } from "firebase/auth";
+
+function Login() {
+  // State for email, password, message, and loading state
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const navigate = useNavigate();
+
+  // Function to log in user with Firebase Authentication
+  const loginUser = async () => {
+    setLoading(true);
+    try {
+      // Firebase function to log in the user with email and password
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      const user = userCredential.user;
+
+      setMessage("Login successful!");
+      console.log("User logged in:", user);
+
+      navigate("/dashboard");
+    } catch (error) {
+      setMessage("Failed to log in. Please check your email or password.");
+      console.error("Error logging in:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    <>
-      <div>login</div>
-    </>
+    <div className="min-h-screen bg-bgdark flex flex-col justify-center items-center">
+      <div className="text-3xl font-heading mt-10">
+        <div className="text-white">Login</div>
+      </div>
+      <div className="flex flex-col justify-center items-center mt-10">
+        {/* Email Input */}
+        <input
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="Email"
+          className="p-2 border border-gray-300 rounded w-80"
+        />
+        {/* Password Input */}
+        <input
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="Password"
+          className="p-2 border border-gray-300 rounded w-80 mt-5"
+        />
+        {/* Login Button */}
+        <button
+          className={`bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 focus:outline-none mt-10 ${
+            loading ? "opacity-50 cursor-not-allowed" : ""
+          }`}
+          onClick={loginUser}
+          disabled={loading}
+        >
+          {loading ? "Logging in..." : "Login"}
+        </button>
+        <p className="text-white font-body mt-5">{message}</p>
+      </div>
+    </div>
   );
 }
-export default login;
+
+export default Login;

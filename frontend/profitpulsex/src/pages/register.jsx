@@ -46,11 +46,11 @@ function Register() {
       );
       const user = userCredential.user;
 
-      setMessage(`User with email: ${user.email} successfully registered `);
+      setMessage(` Successfully Registered!`);
       console.log("User registered:", user);
       setTimeout(() => {
         navigate("/login");
-      }, 2000);
+      }, 5000);
     } catch (error) {
       // set custom error message from errorMessage function
       const customMessage = errorMessage(error.code);
