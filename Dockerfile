@@ -21,7 +21,7 @@ WORKDIR /app
 COPY Backend/ /app/Backend
 
 # Copy the built React app from the previous stage
-COPY --from=build /app /app/Frontend/profitpulsex
+COPY --from=build /app /app/Frontend/profitpulsex/dist
 
 # Copy the requirements file and install dependencies
 COPY requirements.txt ./
