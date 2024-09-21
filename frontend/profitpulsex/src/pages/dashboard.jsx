@@ -3,7 +3,7 @@ function dashboard() {
     <>
       <div className="min-h-screen bg-bgdark flex flex-col justify-center items-center">
         <div className="text-3xl font-heading mt-10">
-          <div className="text-white">Dashboard</div>
+          <div className="text-green-600">Dashboard</div>
         </div>
       </div>
     </>
