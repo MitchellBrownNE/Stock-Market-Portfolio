@@ -2,7 +2,7 @@ from flask import Flask, send_from_directory, jsonify
 import os
 
 # Adjust the path to the static folder based on the main directory on Render
-static_folder_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../frontend/profitpulsex/dist'))
+static_folder_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../Frontend/profitpulsex/dist'))
 
 # Initialize the Flask application
 app = Flask(__name__, static_url_path='', static_folder=static_folder_path)
