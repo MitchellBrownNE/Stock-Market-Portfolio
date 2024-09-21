@@ -11,7 +11,7 @@ class ProcessedStock:
         self.data = scaler.fit_transform(data[features])
 
         return self.data
-
+    
     
 def ProcessData():
     processed_stock = {}
