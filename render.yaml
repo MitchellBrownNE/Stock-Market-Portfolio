@@ -1,2 +1,11 @@
-buildCommand: npm install && npx vite build
-publishDir: Frontend/profitpulsex/dist
+#buildCommand: npm install && npx vite build
+#publishDir: Frontend/profitpulsex/dist
+
+services:
+  - type: web
+    name: my-web-service
+    env: python
+    buildCommand: npm install && npx vite build
+    startCommand: flask run
+    publish:
+      path: Frontend/profitpulsex/dist
