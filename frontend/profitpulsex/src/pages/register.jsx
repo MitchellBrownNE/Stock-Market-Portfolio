@@ -27,6 +27,13 @@ function Register() {
     }
   };
 
+  // function to validate the password
+  const validatePassword = (password) => {
+    // regular expression for search pattern in password text [A-Z] checks for capital, \d checks for digit
+    const capitalAndNum = /^(?=.*[A-Z])(?=.*\d).+$/;
+    return capitalAndNum.test(password);
+  };
+
   // function to register user with firebase authentication
   const registerUser = async () => {
     setLoading(true);
@@ -34,6 +41,15 @@ function Register() {
       // verify both password are identical - strict inequality
       if (password !== confirmPassword) {
         setMessage("Passwords do not match. Please try again.");
+        setLoading(false);
+        return;
+      }
+
+      // validate password strength (capital letter and number)
+      if (!validatePassword(password)) {
+        setMessage(
+          "Password must include at least one capital letter and one number."
+        );
         setLoading(false);
         return;
       }
@@ -50,7 +66,7 @@ function Register() {
       console.log("User registered:", user);
       setTimeout(() => {
         navigate("/login");
-      }, 5000);
+      }, 2500);
     } catch (error) {
       // set custom error message from errorMessage function
       const customMessage = errorMessage(error.code);
