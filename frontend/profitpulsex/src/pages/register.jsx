@@ -108,13 +108,22 @@ function Register() {
         />
         {/* call registerUser when button is clicked*/}
         <button
-          className="bg-lightgreen font-body text-white px-6 py-2 rounded-lg hover:bg-green-600 focus:outline-none mt-10"
+          className="bg-lightgreen font-body text-white  text-lg px-6 py-2 rounded-lg hover:bg-green-600 focus:outline-none mt-10"
           onClick={registerUser}
           disabled={loading}
         >
           {loading ? "Registering..." : "Register"}
         </button>
         <p className="text-white font-body mt-5">{message}</p>
+        {/* Password Requirements List */}
+        <div className="text-white mt-5">
+          <h3 className="text-xl mb-2">Password Requirements:</h3>
+          <ul className="list-disc list-inside text-left text-lg font-body">
+            <li>At least 6 characters long</li>
+            <li>At least one capital letter</li>
+            <li>At least one number</li>
+          </ul>
+        </div>
       </div>
     </div>
   );
