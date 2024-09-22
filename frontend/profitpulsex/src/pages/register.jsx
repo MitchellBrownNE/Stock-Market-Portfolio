@@ -10,8 +10,10 @@ function Register() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
+  const [passwordVisible, setPasswordVisible] = useState(false);
+  const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
 
-  const navigate = useNavigate(); // Initialize the useNavigate hook
+  const navigate = useNavigate();
 
   // add custom error codes based on each firebase case for denied authenticatioono
   const errorMessage = (errorCode) => {
@@ -27,6 +29,13 @@ function Register() {
     }
   };
 
+  // function to validate the password
+  const validatePassword = (password) => {
+    // regular expression for search pattern in password text [A-Z] checks for capital, \d checks for digit
+    const capitalAndNum = /^(?=.*[A-Z])(?=.*\d).+$/;
+    return capitalAndNum.test(password);
+  };
+
   // function to register user with firebase authentication
   const registerUser = async () => {
     setLoading(true);
@@ -34,6 +43,15 @@ function Register() {
       // verify both password are identical - strict inequality
       if (password !== confirmPassword) {
         setMessage("Passwords do not match. Please try again.");
+        setLoading(false);
+        return;
+      }
+
+      // validate password strength (capital letter and number)
+      if (!validatePassword(password)) {
+        setMessage(
+          "Password must include at least one capital letter and one number."
+        );
         setLoading(false);
         return;
       }
@@ -50,7 +68,7 @@ function Register() {
       console.log("User registered:", user);
       setTimeout(() => {
         navigate("/login");
-      }, 5000);
+      }, 2500);
     } catch (error) {
       // set custom error message from errorMessage function
       const customMessage = errorMessage(error.code);
@@ -74,31 +92,58 @@ function Register() {
           placeholder="Email"
           className="p-2 border border-gray-300 rounded w-80"
         />
-        {/* password input */}
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="Password"
-          className="p-2 border border-gray-300 rounded w-80 mt-5"
-        />
-        {/* confirm password input */}
-        <input
-          type="password"
-          value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
-          placeholder="Confirm Password"
-          className="p-2 border border-gray-300 rounded w-80 mt-5"
-        />
+        {/* Password input with visibility toggle */}
+        <div className="relative w-80 mt-5">
+          <input
+            type={passwordVisible ? "text" : "password"}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Password"
+            className="p-2 border border-gray-300 rounded w-full"
+          />
+          <button
+            type="button"
+            className="absolute inset-y-0 right-2 flex items-center text-sm text-gray-600"
+            onClick={() => setPasswordVisible(!passwordVisible)}
+          >
+            {passwordVisible ? "Hide" : "Show"}
+          </button>
+        </div>
+        {/* Confirm Password input with visibility toggle */}
+        <div className="relative w-80 mt-5">
+          <input
+            type={confirmPasswordVisible ? "text" : "password"}
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            placeholder="Confirm Password"
+            className="p-2 border border-gray-300 rounded w-full"
+          />
+          <button
+            type="button"
+            className="absolute inset-y-0 right-2 flex items-center text-sm text-gray-600"
+            onClick={() => setConfirmPasswordVisible(!confirmPasswordVisible)}
+          >
+            {confirmPasswordVisible ? "Hide" : "Show"}
+          </button>
+        </div>
         {/* call registerUser when button is clicked*/}
         <button
-          className="bg-lightgreen font-body text-white px-6 py-2 rounded-lg hover:bg-green-600 focus:outline-none mt-10"
+          className="bg-lightgreen font-body text-white  text-lg px-6 py-2 rounded-lg hover:bg-green-600 focus:outline-none mt-10"
           onClick={registerUser}
           disabled={loading}
         >
           {loading ? "Registering..." : "Register"}
         </button>
         <p className="text-white font-body mt-5">{message}</p>
+        {/* Password Requirements List */}
+        <div className="text-white mt-20">
+          <h3 className="text-xl mb-2">Password Requirements:</h3>
+          <ul className="list-disc list-inside text-left text-lg font-body">
+            <li>At least 6 characters long</li>
+            <li>At least one capital letter</li>
+            <li>At least one number</li>
+          </ul>
+        </div>
       </div>
     </div>
   );
