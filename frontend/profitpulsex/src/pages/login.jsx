@@ -9,6 +9,7 @@ function Login() {
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
+  const [passwordVisible, setPasswordVisible] = useState(false);
 
   const navigate = useNavigate();
 
@@ -50,17 +51,27 @@ function Login() {
           placeholder="Email"
           className="p-2 border border-gray-300 rounded w-80"
         />
-        {/* Password Input */}
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="Password"
-          className="p-2 border border-gray-300 rounded w-80 mt-5"
-        />
+        {/* Password Input with visibility toggle */}
+        <div className="relative w-80 mt-5">
+          <input
+            type={passwordVisible ? "text" : "password"}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Password"
+            className="p-2 border border-gray-300 rounded w-full"
+          />
+          <button
+            type="button"
+            className="absolute inset-y-0 right-2 flex items-center text-sm text-gray-600"
+            onClick={() => setPasswordVisible(!passwordVisible)}
+          >
+            {passwordVisible ? "Hide" : "Show"}
+          </button>
+        </div>
+
         {/* Login Button */}
         <button
-          className={`bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 focus:outline-none mt-10 ${
+          className={`bg-lightgreen font-body text-white  text-lg px-6 py-2 rounded-lg hover:bg-green-600 focus:outline-none mt-10 ${
             loading ? "opacity-50 cursor-not-allowed" : ""
           }`}
           onClick={loginUser}
