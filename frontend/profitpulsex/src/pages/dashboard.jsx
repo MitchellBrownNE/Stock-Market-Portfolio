@@ -1,20 +1,37 @@
 import React, { useEffect, useState } from "react";
 import Card from "./components/card";
 
+// Function to fetch stock profile data
 const fetchStockData = async (symbol) => {
   const apiKey = 'crnnk0hr01qt44di7ng0crnnk0hr01qt44di7ngg'; // Replace with your actual Finnhub API key
   const response = await fetch(`https://finnhub.io/api/v1/stock/profile2?symbol=${symbol}&token=${apiKey}`);
-  
+
   if (!response.ok) {
     throw new Error("Network response was not ok");
   }
-  
+
+  const data = await response.json();
+  return data;
+};
+
+// Function to fetch current stock price
+const fetchCurrentPrice = async (symbol) => {
+  const apiKey = 'crnnk0hr01qt44di7ng0crnnk0hr01qt44di7ngg'; // Replace with your actual Finnhub API key
+  const response = await fetch(`https://finnhub.io/api/v1/quote?symbol=${symbol}&token=${apiKey}`);
+
+  if (!response.ok) {
+    throw new Error("Network response was not ok");
+  }
+
   const data = await response.json();
   return data;
 };
 
 function Dashboard() {
   const [stockData, setStockData] = useState(null);
+  const [currentPrice, setCurrentPrice] = useState(null); // State for current stock price
+  const [priceChange, setPriceChange] = useState(null); // State for price change
+  const [percentChange, setPercentChange] = useState(null); // State for percent change
   const [error, setError] = useState(null);
 
   const fetchStocks = async (symbol) => {
@@ -22,9 +39,18 @@ function Dashboard() {
       const data = await fetchStockData(symbol);
       setStockData(data);
       setError(null); // Clear any previous error
+
+      // Fetch current stock price
+      const priceData = await fetchCurrentPrice(symbol);
+      setCurrentPrice(priceData.c); // Update the current price state (using `c` for current price)
+      setPriceChange(priceData.d); // Update the price change state (using `d` for price change)
+      setPercentChange(priceData.dp); // Update the percent change state (using `dp` for percentage change)
     } catch (err) {
       setError("Failed to fetch stock data.");
       setStockData(null); // Clear previous stock data on error
+      setCurrentPrice(null); // Clear current price on error
+      setPriceChange(null); // Clear price change on error
+      setPercentChange(null); // Clear percent change on error
     }
   };
 
@@ -56,19 +82,19 @@ function Dashboard() {
           </Card>
         </div>
 
-        {/* True Stock and Predicted Stock on the right */}
+        {/* Stock Price and Predicted Price on the right */}
         <div className="col-span-1 row-span-1">
           <Card>
-            True Stock: {stockData ? stockData.ticker : "Select a stock"}
+            Stock Price: {currentPrice !== null ? `$${currentPrice} (${priceChange} (${percentChange}%) today)` : "Select a stock"}
           </Card>
         </div>
         <div className="col-span-1 row-span-1">
           <Card>
-            Predicted Stock: {stockData ? stockData.predicted : "N/A"}
+            Predicted Price: {stockData ? stockData.predicted : "N/A"}
           </Card>
         </div>
 
-        {/* Details below True and Predicted Stock */}
+        {/* Details below Stock Price and Predicted Price */}
         <div className="col-span-1 row-span-5">
           <Card>
             {error && <div>{error}</div>}
