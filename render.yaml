@@ -1,2 +1,2 @@
 buildCommand: npx vite build
-publishDir: Frontend/profitpulsex
+publishDir: Frontend/profitpulsex/dist
