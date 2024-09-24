@@ -15,7 +15,7 @@ class Stock:
     #Will download the API data with 1 hour intervals and dropping adjusted close
     def download_data(self, start, end, interval='1h'):
         self.data = yf.download(self.ticker, start=start, end=end, interval=interval)
-        self.data.drop(columns=['Adj Close'], inplace=True)
+        self.data.drop(columns=['Close', 'Volume'], inplace=True)
         return self.data
 
 def DownloadData():
@@ -24,7 +24,9 @@ def DownloadData():
 
     # Start and end times for downloading data
     end = datetime.now()
-    start = datetime(end.year - 1, end.month, end.day)
+    # Need to make it so it will just be 1yr and 8months previous instead of subtracting to avoid
+    # negative numbers.
+    start = datetime(end.year - 1, end.month - 8, end.day)
 
     # Loop to download the ticker data into each class.
     for ticker in tickers:
