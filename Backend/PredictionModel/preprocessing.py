@@ -37,9 +37,33 @@ def ProcessData():
 
     return processed_stock
 
-if __name__ == '__main__':
-    processed = ProcessData()
+def SplitData():
+    split_stock = {}
+    processed_data = ProcessData()
 
-    print(processed['F'].shape)
-    print(processed['GM'].shape)
-    print(processed['TSLA'].shape)
+    backcandles = 18
+    futurecandles = 1
+
+    X = []
+    y = []
+
+    for ticker in processed_data:
+        ticker_X = []
+        ticker_y = []
+        print(processed_data[ticker].shape)
+        for j in range(backcandles, processed_data[ticker].shape[0] - futurecandles):
+            features = processed_data[ticker][j-backcandles:j, :8]  # Assuming the first 8 columns are features
+            label = processed_data[ticker][j + futurecandles, 3]  # Assuming the 4th column (index 3) is the target
+            ticker_X.append(features)
+            ticker_y.append(label)
+        
+        X.append(ticker_X)
+        y.append(ticker_y)
+
+    # Flatten the lists if you want a single list of samples
+    X = [item for sublist in X for item in sublist]
+    y = [item for sublist in y for item in sublist]
+    
+
+if __name__ == '__main__':
+    SplitData()
