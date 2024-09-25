@@ -139,7 +139,7 @@ function Register() {
           </button>
           {/* Already Have an Account Button */}
           <button
-            className="mt-8 text-black text-lg font-body text-black hover:text-gray-300 focus:outline-none"
+            className="mt-8 text-lg text-black hover:text-gray-300 focus:outline-none"
             onClick={() => navigate("/login")}
           >
             Already have an account? Log in
