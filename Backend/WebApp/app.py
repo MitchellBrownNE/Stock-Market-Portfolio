@@ -25,7 +25,3 @@ def ignore_favicon():
 @app.errorhandler(404)
 def not_found(e):
     return send_from_directory(app.static_folder, 'index.html')
-
-# Run the Flask application
-if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)

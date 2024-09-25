@@ -39,50 +39,61 @@ function Login() {
 
   return (
     <div className="min-h-screen bg-bgdark flex flex-col justify-center items-center">
-      <div className="text-3xl font-heading mt-10">
-        <div className="text-white">Login</div>
-      </div>
-      <div className="flex flex-col justify-center items-center mt-10">
-        {/* Email Input */}
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="Email"
-          className="p-2 border border-gray-300 rounded w-80"
-        />
-        {/* Password Input with visibility toggle */}
-        <div className="relative w-80 mt-5">
-          <input
-            type={passwordVisible ? "text" : "password"}
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Password"
-            className="p-2 border border-gray-300 rounded w-full"
-          />
-          <button
-            type="button"
-            className="absolute inset-y-0 right-2 flex items-center text-sm text-gray-600"
-            onClick={() => setPasswordVisible(!passwordVisible)}
-          >
-            {passwordVisible ? "Hide" : "Show"}
-          </button>
+      <div className="w-full max-w-md p-8 rounded-sm shadow-lg bg-white">
+        <div className="text-4xl font-heading text-center mb-8">
+          <div className="text-black">Login</div>
         </div>
 
-        {/* Login Button */}
-        <button
-          className={`bg-lightgreen font-body text-white  text-lg px-6 py-2 rounded-lg hover:bg-green-600 focus:outline-none mt-10 ${
-            loading ? "opacity-50 cursor-not-allowed" : ""
-          }`}
-          onClick={loginUser}
-          disabled={loading}
-        >
-          {loading ? "Logging in..." : "Login"}
-        </button>
-        <p className="text-white font-body mt-5">{message}</p>
+        {/* Email input */}
+        <div className="flex flex-col justify-center items-center mt-10">
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Email"
+            className="p-2 border border-black rounded w-80"
+          />
+
+          {/* Password input with visibility toggle */}
+          <div className="relative w-80 mt-5">
+            <input
+              type={passwordVisible ? "text" : "password"}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Password"
+              className="p-2 border border-black rounded w-full"
+            />
+            <button
+              type="button"
+              className="absolute inset-y-0 right-2 flex items-center text-sm text-gray-600"
+              onClick={() => setPasswordVisible(!passwordVisible)}
+            >
+              {passwordVisible ? "Hide" : "Show"}
+            </button>
+          </div>
+          <p className="text-boldred font-body mt-5">{message}</p>
+
+          {/* Login Button */}
+          <button
+            className={`bg-lightgreen font-body text-black text-lg px-6 py-2 rounded-lg hover:bg-green-600 focus:outline-none mt-10 ${
+              loading ? "opacity-50 cursor-not-allowed" : ""
+            }`}
+            onClick={loginUser}
+            disabled={loading}
+          >
+            {loading ? "Logging in..." : "Login"}
+          </button>
+
+          {/* Register navigation */}
+          <button
+            className="mt-8 text-lg text-black hover:text-gray-300 focus:outline-none"
+            onClick={() => navigate("/register")}
+          >
+            Don't have an account? Register
+          </button>
+        </div>
       </div>
     </div>
   );
 }
-
 export default Login;
