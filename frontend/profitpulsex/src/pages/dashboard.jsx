@@ -1,30 +1,75 @@
 import React, { useEffect, useState } from "react";
 import Card from "./components/card";
 
+// Function to fetch stock profile data
 const fetchStockData = async (symbol) => {
   const apiKey = 'crnnk0hr01qt44di7ng0crnnk0hr01qt44di7ngg'; // Replace with your actual Finnhub API key
   const response = await fetch(`https://finnhub.io/api/v1/stock/profile2?symbol=${symbol}&token=${apiKey}`);
-  
+
   if (!response.ok) {
     throw new Error("Network response was not ok");
   }
-  
+
   const data = await response.json();
   return data;
 };
 
+// Function to fetch current stock price
+const fetchCurrentPrice = async (symbol) => {
+  const apiKey = 'crnnk0hr01qt44di7ng0crnnk0hr01qt44di7ngg'; // Replace with your actual Finnhub API key
+  const response = await fetch(`https://finnhub.io/api/v1/quote?symbol=${symbol}&token=${apiKey}`);
+
+  if (!response.ok) {
+    throw new Error("Network response was not ok");
+  }
+
+  const data = await response.json();
+  return data;
+};
+
+// Function to fetch predicted price from Python API
+const fetchPredictedPrice = async (symbol) => {
+  const response = await fetch(`http://127.0.0.1:5000/api/predict?symbol=${symbol}`); // Pass symbol to API
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch predicted price from API");
+  }
+
+  const data = await response.json();
+  return data.predicted_price; // Adjust based on your API response structure
+};
+
 function Dashboard() {
   const [stockData, setStockData] = useState(null);
+  const [currentPrice, setCurrentPrice] = useState(null); // State for current stock price
+  const [priceChange, setPriceChange] = useState(null); // State for price change
+  const [percentChange, setPercentChange] = useState(null); // State for percent change
+  const [predictedPrice, setPredictedPrice] = useState(null); // State for predicted price
   const [error, setError] = useState(null);
 
   const fetchStocks = async (symbol) => {
     try {
+      // Fetch stock profile data
       const data = await fetchStockData(symbol);
       setStockData(data);
       setError(null); // Clear any previous error
+
+      // Fetch current stock price
+      const priceData = await fetchCurrentPrice(symbol);
+      setCurrentPrice(priceData.c); // Update the current price state (using `c` for current price)
+      setPriceChange(priceData.d); // Update the price change state (using `d` for price change)
+      setPercentChange(priceData.dp); // Update the percent change state (using `dp` for percentage change)
+
+      // Fetch predicted stock price from the Python backend
+      const predictedPrice = await fetchPredictedPrice(symbol); // Pass symbol to fetch predicted price
+      setPredictedPrice(predictedPrice); // Set predicted price
     } catch (err) {
       setError("Failed to fetch stock data.");
       setStockData(null); // Clear previous stock data on error
+      setCurrentPrice(null); // Clear current price on error
+      setPriceChange(null); // Clear price change on error
+      setPercentChange(null); // Clear percent change on error
+      setPredictedPrice(null); // Clear predicted price on error
     }
   };
 
@@ -35,7 +80,6 @@ function Dashboard() {
   return (
     <>
       <div className="h-screen grid grid-cols-4 grid-rows-6 gap-4 p-10 font-quicksand relative bg-bgdark">
-        
         {/* Tesla, GM, Ford buttons */}
         <div className="col-span-1 row-span-1" onClick={() => handleCardClick("TSLA")}>
           <Card>Tesla</Card>
@@ -56,19 +100,19 @@ function Dashboard() {
           </Card>
         </div>
 
-        {/* True Stock and Predicted Stock on the right */}
+        {/* Stock Price and Predicted Price on the right */}
         <div className="col-span-1 row-span-1">
           <Card>
-            True Stock: {stockData ? stockData.ticker : "Select a stock"}
+            Stock Price: {currentPrice !== null ? `$${currentPrice} (${priceChange} (${percentChange}%) today)` : "Select a stock"}
           </Card>
         </div>
         <div className="col-span-1 row-span-1">
           <Card>
-            Predicted Stock: {stockData ? stockData.predicted : "N/A"}
+            Predicted Price: {predictedPrice !== null ? `$${predictedPrice}` : "N/A"} {/* Correctly using predictedPrice */}
           </Card>
         </div>
 
-        {/* Details below True and Predicted Stock */}
+        {/* Details below Stock Price and Predicted Price */}
         <div className="col-span-1 row-span-5">
           <Card>
             {error && <div>{error}</div>}
@@ -78,7 +122,7 @@ function Dashboard() {
                 <p>Country: {stockData.country}</p>
                 <p>Currency: {stockData.currency}</p>
                 <p>Exchange: {stockData.exchange}</p>
-                <p>IPO Date: {stockData.ipoDate}</p>
+                <p>IPO Date: {stockData.ipo}</p>
                 <p>Market Capitalization: {stockData.marketCapitalization}</p>
                 <p>Industry: {stockData.finnhubIndustry}</p>
               </div>
@@ -87,7 +131,6 @@ function Dashboard() {
             )}
           </Card>
         </div>
-
       </div>
     </>
   );
