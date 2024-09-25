@@ -20,13 +20,13 @@ function StarterPage() {
         </p>
         <div className="flex space-x-4 mt-10">
           <button
-            className="bg-lightgreen font-body text-white px-6 py-2 rounded-lg hover:bg-green-600 focus:outline-none"
+            className="bg-lightgreen font-body text-black px-6 py-2 rounded-lg hover:bg-green-600 focus:outline-none"
             onClick={() => navigate("/login")}
           >
             Login
           </button>
           <button
-            className="bg-boldred font-body text-white px-6 py-2 rounded-lg hover:bg-red-600 focus:outline-none"
+            className="bg-boldred font-body text-black px-6 py-2 rounded-lg hover:bg-red-600 focus:outline-none"
             onClick={() => navigate("/register")}
           >
             Register
