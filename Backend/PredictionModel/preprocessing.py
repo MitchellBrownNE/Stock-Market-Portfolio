@@ -47,23 +47,27 @@ def SplitData():
     X = []
     y = []
 
+    # This look will fetch each of the tickers within processed_data. The X value will contain a list of lists
+    # that will contain 18 previous close prices in each list, the total amount of lists will be the length of
+    # the dataset. The y list will contain each of the future prices a day ahead.
     for ticker in processed_data:
         ticker_X = []
         ticker_y = []
-        print(processed_data[ticker].shape)
         for j in range(backcandles, processed_data[ticker].shape[0] - futurecandles):
-            features = processed_data[ticker][j-backcandles:j, :8]
-            label = processed_data[ticker][j + futurecandles, 3]
-            ticker_X.append(features)
-            ticker_y.append(label)
+            ticker_X.append(processed_data[ticker][j-backcandles:j, :8])
+            ticker_y.append(processed_data[ticker][j + futurecandles, 3])
         
         X.append(ticker_X)
         y.append(ticker_y)
 
-    # Flatten the lists if you want a single list of samples
-    X = [item for sublist in X for item in sublist]
-    y = [item for sublist in y for item in sublist]
+        # Add X and y lists to each of the ticker dictionaries
+        split_stock[ticker] = X
+        split_stock[ticker] = y
+
+    return split_stock
+
+
     
 
 if __name__ == '__main__':
-    SplitData()
+    data = SplitData()
