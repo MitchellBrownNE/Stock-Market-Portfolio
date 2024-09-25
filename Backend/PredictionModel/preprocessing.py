@@ -52,8 +52,8 @@ def SplitData():
         ticker_y = []
         print(processed_data[ticker].shape)
         for j in range(backcandles, processed_data[ticker].shape[0] - futurecandles):
-            features = processed_data[ticker][j-backcandles:j, :8]  # Assuming the first 8 columns are features
-            label = processed_data[ticker][j + futurecandles, 3]  # Assuming the 4th column (index 3) is the target
+            features = processed_data[ticker][j-backcandles:j, :8]
+            label = processed_data[ticker][j + futurecandles, 3]
             ticker_X.append(features)
             ticker_y.append(label)
         
