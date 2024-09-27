@@ -8,7 +8,6 @@ class ProcessedStock:
         self.data = data
 
     def process_stock_data(self, data):
-        features = ['Open', 'High', 'Low', 'Adj Close', 'RSI', 'EMAF', 'EMAM', 'EMAL']
 
         data['RSI'] = ta.rsi(data['Adj Close'], timeperiod=14)
         data['EMAF'] = ta.ema(data['Adj Close'], timeperiod=20)
@@ -41,7 +40,7 @@ def SplitData():
     split_stock = {}
     processed_data = ProcessData()
 
-    backcandles = 24
+    backcandles = 48 # Will use 12 days of back candles hourly as there is 7 hrs per day in market
     futurecandles = 12
 
     X = []
@@ -62,15 +61,5 @@ def SplitData():
 
         # Add X and y lists to each of the ticker dictionaries
         split_stock[ticker] = {'X': ticker_X, 'y': ticker_y}
-    
 
-    return split_stock
-
-
-    
-
-if __name__ == '__main__':
-    
-    data = SplitData()
-
-    print(data['F']['y'])
+    return split_stock, backcandles, futurecandles
