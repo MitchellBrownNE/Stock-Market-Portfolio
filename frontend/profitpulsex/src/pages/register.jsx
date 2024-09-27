@@ -134,7 +134,13 @@ function Register() {
               {confirmPasswordVisible ? "Hide" : "Show"}
             </button>
           </div>
-          <p className="text-boldred text-black  font-body mt-5">{message}</p>
+          <p
+            className={`mt-5 font-body text-center ${
+              messageType === "success" ? "text-green-500" : "text-red-500"
+            }`}
+          >
+            {message}
+          </p>
           {/* call registerUser when button is clicked*/}
           <button
             className="bg-lightgreen font-body text-black  text-lg px-6 py-2 rounded-lg hover:bg-lightgreen focus:outline-none mt-10"
