@@ -61,8 +61,9 @@ def SplitData():
         y.append(ticker_y)
 
         # Add X and y lists to each of the ticker dictionaries
-        split_stock[ticker] = X
-        split_stock[ticker] = y
+        split_stock[ticker] = {'X': ticker_X, 'y': ticker_y}
+
+    print(split_stock['F'].shape)
 
     return split_stock
 
@@ -71,3 +72,6 @@ def SplitData():
 
 if __name__ == '__main__':
     data = SplitData()
+
+    
+    
