@@ -67,82 +67,95 @@ function Register() {
       setMessage(` Successfully Registered!`);
       console.log("User registered:", user);
       setTimeout(() => {
+        setLoading(true);
         navigate("/login");
-      }, 2500);
+      }, 3000);
     } catch (error) {
       // set custom error message from errorMessage function
       const customMessage = errorMessage(error.code);
       setMessage(customMessage);
-    } finally {
       setLoading(false);
     }
   };
 
   return (
     <div className="min-h-screen bg-bgdark flex flex-col justify-center items-center">
-      <div className="text-3xl font-heading mt-10">
-        <div className="text-white">Register</div>
-      </div>
-      {/* Email input -- update setEmail based on event when user interacts with input form */}
-      <div className="flex flex-col justify-center items-center mt-10">
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="Email"
-          className="p-2 border border-gray-300 rounded w-80"
-        />
-        {/* Password input with visibility toggle */}
-        <div className="relative w-80 mt-5">
-          <input
-            type={passwordVisible ? "text" : "password"}
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Password"
-            className="p-2 border border-gray-300 rounded w-full"
-          />
-          <button
-            type="button"
-            className="absolute inset-y-0 right-2 flex items-center text-sm text-gray-600"
-            onClick={() => setPasswordVisible(!passwordVisible)}
-          >
-            {passwordVisible ? "Hide" : "Show"}
-          </button>
+      <div className="w-full max-w-md p-8 rounded-sm shadow-lg bg-white">
+        <div className="text-4xl font-heading text-center mb-8">
+          <div className="text-black">Register</div>
         </div>
-        {/* Confirm Password input with visibility toggle */}
-        <div className="relative w-80 mt-5">
+
+        {/* Email input -- update setEmail based on event when user interacts with input form */}
+        <div className="flex flex-col justify-center items-center mt-10">
           <input
-            type={confirmPasswordVisible ? "text" : "password"}
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            placeholder="Confirm Password"
-            className="p-2 border border-gray-300 rounded w-full"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Email"
+            className="p-2 border border-black rounded w-80"
           />
+          {/* Password input with visibility toggle */}
+          <div className="relative w-80 mt-5">
+            <input
+              type={passwordVisible ? "text" : "password"}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Password"
+              className="p-2 border border-black rounded w-full"
+            />
+            <button
+              type="button"
+              className="absolute inset-y-0 right-2 flex items-center text-sm text-gray-600"
+              onClick={() => setPasswordVisible(!passwordVisible)}
+            >
+              {passwordVisible ? "Hide" : "Show"}
+            </button>
+          </div>
+          {/* Confirm Password input with visibility toggle */}
+          <div className="relative w-80 mt-5">
+            <input
+              type={confirmPasswordVisible ? "text" : "password"}
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              placeholder="Confirm Password"
+              className="p-2 border border-black rounded w-full"
+            />
+            <button
+              type="button"
+              className="absolute inset-y-0 right-2 flex items-center text-sm text-gray-600"
+              onClick={() => setConfirmPasswordVisible(!confirmPasswordVisible)}
+            >
+              {confirmPasswordVisible ? "Hide" : "Show"}
+            </button>
+          </div>
+          <p className="text-boldred text-black  font-body mt-5">{message}</p>
+          {/* call registerUser when button is clicked*/}
           <button
-            type="button"
-            className="absolute inset-y-0 right-2 flex items-center text-sm text-gray-600"
-            onClick={() => setConfirmPasswordVisible(!confirmPasswordVisible)}
+            className="bg-lightgreen font-body text-black  text-lg px-6 py-2 rounded-lg hover:bg-lightgreen focus:outline-none mt-10"
+            onClick={registerUser}
+            disabled={loading}
           >
-            {confirmPasswordVisible ? "Hide" : "Show"}
+            {loading ? "Registering..." : "Register"}
           </button>
-        </div>
-        {/* call registerUser when button is clicked*/}
-        <button
-          className="bg-lightgreen font-body text-white  text-lg px-6 py-2 rounded-lg hover:bg-green-600 focus:outline-none mt-10"
-          onClick={registerUser}
-          disabled={loading}
-        >
-          {loading ? "Registering..." : "Register"}
-        </button>
-        <p className="text-white font-body mt-5">{message}</p>
-        {/* Password Requirements List */}
-        <div className="text-white mt-20">
-          <h3 className="text-xl mb-2">Password Requirements:</h3>
-          <ul className="list-disc list-inside text-left text-lg font-body">
-            <li>At least 6 characters long</li>
-            <li>At least one capital letter</li>
-            <li>At least one number</li>
-          </ul>
+          {/* Already Have an Account Button */}
+          <button
+            className="mt-8 text-lg text-black hover:text-gray-300 focus:outline-none"
+            onClick={() => navigate("/login")}
+          >
+            Already have an account? Log in
+          </button>
+
+          {/* Password Requirements List */}
+          <div className="text-white mt-20">
+            <h3 className="text-xl mb-2 text-black font-body">
+              Password Requirements:
+            </h3>
+            <ul className="list-disc list-inside text-left text-lg text-black font-body">
+              <li>At least 6 characters long</li>
+              <li>At least one capital letter</li>
+              <li>At least one number</li>
+            </ul>
+          </div>
         </div>
       </div>
     </div>
