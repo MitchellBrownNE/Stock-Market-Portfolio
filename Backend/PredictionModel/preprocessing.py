@@ -41,8 +41,8 @@ def SplitData():
     split_stock = {}
     processed_data = ProcessData()
 
-    backcandles = 18
-    futurecandles = 1
+    backcandles = 24
+    futurecandles = 12
 
     X = []
     y = []
@@ -62,8 +62,7 @@ def SplitData():
 
         # Add X and y lists to each of the ticker dictionaries
         split_stock[ticker] = {'X': ticker_X, 'y': ticker_y}
-
-    print(split_stock['F'].shape)
+    
 
     return split_stock
 
@@ -71,7 +70,7 @@ def SplitData():
     
 
 if __name__ == '__main__':
+    
     data = SplitData()
 
-    
-    
+    print(data['F']['y'])
