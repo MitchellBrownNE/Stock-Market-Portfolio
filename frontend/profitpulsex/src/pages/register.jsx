@@ -12,6 +12,7 @@ function Register() {
   const [loading, setLoading] = useState(false);
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
+  const [messageType, setMessageType] = useState("");
 
   const navigate = useNavigate();
 
@@ -42,13 +43,16 @@ function Register() {
     try {
       // verify both password are identical - strict inequality
       if (password !== confirmPassword) {
+        setMessageType("error");
         setMessage("Passwords do not match. Please try again.");
+
         setLoading(false);
         return;
       }
 
       // validate password strength (capital letter and number)
       if (!validatePassword(password)) {
+        setMessageType("error");
         setMessage(
           "Password must include at least one capital letter and one number."
         );
@@ -62,6 +66,7 @@ function Register() {
         email,
         password
       );
+      setMessageType("success");
       const user = userCredential.user;
 
       setMessage(` Successfully Registered!`);
@@ -72,6 +77,7 @@ function Register() {
       }, 3000);
     } catch (error) {
       // set custom error message from errorMessage function
+      setMessageType("error");
       const customMessage = errorMessage(error.code);
       setMessage(customMessage);
       setLoading(false);
