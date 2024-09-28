@@ -13,6 +13,8 @@ function Register() {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
   const [messageType, setMessageType] = useState("");
+  const [showPasswordRequirements, setShowPasswordRequirements] =
+    useState(false);
 
   const navigate = useNavigate();
 
@@ -105,6 +107,8 @@ function Register() {
             <input
               type={passwordVisible ? "text" : "password"}
               value={password}
+              onFocus={() => setShowPasswordRequirements(true)}
+              onBlur={() => setShowPasswordRequirements(true)}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Password"
               className="p-2 border border-black rounded w-full"
@@ -122,6 +126,8 @@ function Register() {
             <input
               type={confirmPasswordVisible ? "text" : "password"}
               value={confirmPassword}
+              onFocus={() => setShowPasswordRequirements(true)}
+              onBlur={() => setShowPasswordRequirements(true)}
               onChange={(e) => setConfirmPassword(e.target.value)}
               placeholder="Confirm Password"
               className="p-2 border border-black rounded w-full"
@@ -141,6 +147,17 @@ function Register() {
           >
             {message}
           </p>
+          {/* Password Requirements List */}
+          {showPasswordRequirements && (
+            <div className="text-black mt-5">
+              <h3 className="text-xl mb-2">Password Requirements:</h3>
+              <ul className="list-disc list-inside text-left text-lg">
+                <li>At least 6 characters long</li>
+                <li>At least one capital letter</li>
+                <li>At least one number</li>
+              </ul>
+            </div>
+          )}
           {/* call registerUser when button is clicked*/}
           <button
             className="bg-lightgreen font-body text-black  text-lg px-6 py-2 rounded-lg hover:bg-lightgreen focus:outline-none mt-10"
@@ -156,18 +173,6 @@ function Register() {
           >
             Already have an account? Log in
           </button>
-
-          {/* Password Requirements List */}
-          <div className="text-white mt-20">
-            <h3 className="text-xl mb-2 text-black font-body">
-              Password Requirements:
-            </h3>
-            <ul className="list-disc list-inside text-left text-lg text-black font-body">
-              <li>At least 6 characters long</li>
-              <li>At least one capital letter</li>
-              <li>At least one number</li>
-            </ul>
-          </div>
         </div>
       </div>
     </div>
