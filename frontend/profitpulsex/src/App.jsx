@@ -4,11 +4,14 @@ import RegisterPage from "./pages/register";
 import LoginPage from "./pages/login";
 import Dashboard from "./pages/dashboard";
 import Navbar from './component/Navbar';
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
+
 
 function AppContent() {
   const location = useLocation();
 
-const hideNavbarRoutes = ["/login", "/register", "/"];
+const hideNavbarRoutes = ["/login", "/register", "/", "/forgot-password", "/reset-password"];
 
 const showNavbar = !hideNavbarRoutes.includes(location.pathname);
 
@@ -22,6 +25,8 @@ const showNavbar = !hideNavbarRoutes.includes(location.pathname);
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} /> {/* Add Forgot Password Route */}
+        <Route path="/reset-password" element={<ResetPassword />} />
       </Routes>
       </>
   );
