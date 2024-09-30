@@ -3,6 +3,7 @@ import keras as keras
 import numpy as np
 from sklearn.model_selection import train_test_split
 
+# LSTM model class that will handle the preparing, building, training, and running the model. 
 class LSTMmodel:
     def __init__(self, split_data, backcandles, futurecandles):
         self.split_data = split_data
@@ -10,6 +11,7 @@ class LSTMmodel:
         self.futurecandles = futurecandles
         self.model = None
 
+    # Preparing that processed data to numpy arrays and split data into test and train sets to run the model
     def prepare_data(self):
         X = []
         y = []
@@ -26,6 +28,7 @@ class LSTMmodel:
         return X_train, X_test, y_train, y_test
 
 
+    # Builds the model based off of all the features and predicts 7 hours ahead. 
     def build_model(self):
         features = ['Open', 'High', 'Low', 'Adj Close', 'RSI', 'EMAF', 'EMAM', 'EMAL']
 
@@ -38,19 +41,23 @@ class LSTMmodel:
 
         self.model.compile(loss='mse', optimizer=keras.optimizers.Adam())
 
+    # Training the model to fit with 20% validation
     def train_model(self, X_train, y_train):
         self.model.fit(X_train, y_train, epochs=20, batch_size=30, validation_split=0.2)
 
+    # Determine the loss from the trained model
     def evaluate_model(self, X_test, y_test):
         loss = self.model.evaluate(X_test, y_test)
         print(f"Test loss: {loss}")
 
+    # Run all the functions to create the model
     def run_model(self):
         X_train, X_test, y_train, y_test = self.prepare_data()
         self.build_model()
         self.train_model(X_train, y_train)
         self.evaluate_model(X_test, y_test)
 
+# Fully run the model from the split data from preprocessing.py
 def train():
     split_data, backcandles, futurecandles = preprocessing.SplitData()
     model = LSTMmodel(split_data, backcandles, futurecandles)
@@ -61,3 +68,4 @@ def train():
 if __name__ == '__main__':
     train()
 
+#USE KERAS TUNER 
