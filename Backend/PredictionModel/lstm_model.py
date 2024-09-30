@@ -2,6 +2,10 @@ import preprocessing
 import keras as keras
 import numpy as np
 from sklearn.model_selection import train_test_split
+import os
+
+os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
+
 
 # LSTM model class that will handle the preparing, building, training, and running the model. 
 class LSTMmodel:
@@ -22,6 +26,8 @@ class LSTMmodel:
 
         X = np.array(X)
         y = np.array(y)
+
+        X = X.reshape((X.shape[0], self.backcandles, 8))
 
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
