@@ -1,5 +1,6 @@
 import stock_api
 from sklearn.preprocessing import StandardScaler
+from sklearn.model_selection import train_test_split
 import pandas_ta as ta
 import numpy as np
 
@@ -8,58 +9,38 @@ class ProcessedStock:
         self.data = data
 
     def process_stock_data(self, data):
-
+        # Cleaning the data by dropping specific columns and adding in moving averages and dropping
+        # null values within dataset
         data['RSI'] = ta.rsi(data['Adj Close'], timeperiod=14)
         data['EMAF'] = ta.ema(data['Adj Close'], timeperiod=20)
         data['EMAM'] = ta.ema(data['Adj Close'], timeperiod=50)
         data['EMAS'] = ta.ema(data['Adj Close'], timeperiod=200)
         data["TargetNextClose"] = data["Adj Close"].shift(-1)
-
         data.dropna(inplace=True)
 
         scaler = StandardScaler()
         self.data = scaler.fit_transform(data)
 
         return self.data
-    
-    # Getter for object data
-    def get_data(self):
-        return self.data
-    
-def ProcessData():
-    processed_stock = {}
-    data = stock_api.DownloadData()
 
-    for ticker in data:
-        unscaled_data = ProcessedStock(data)
-        processed_stock[ticker] = unscaled_data.process_stock_data(data[ticker])
-
-    return processed_stock
-
-def SplitData():
-    split_stock = {}
-    processed_data = ProcessData()
+def ProcessData(data):
+    unscaled_data = ProcessedStock(data)
+    processed_stock = unscaled_data.process_stock_data(data)
 
     backcandles = 48 # Will use 12 days of back candles hourly as there is 7 hrs per day in market
-    futurecandles = 12
+    futurecandles = 7
 
     X = []
     y = []
 
-    # This look will fetch each of the tickers within processed_data. The X value will contain a list of lists
-    # that will contain 18 previous close prices in each list, the total amount of lists will be the length of
-    # the dataset. The y list will contain each of the future prices a day ahead.
-    for ticker in processed_data:
-        ticker_X = []
-        ticker_y = []
-        for j in range(backcandles, processed_data[ticker].shape[0] - futurecandles):
-            ticker_X.append(processed_data[ticker][j-backcandles:j, :8])
-            ticker_y.append(processed_data[ticker][j + futurecandles, 3])
-        
-        X.append(ticker_X)
-        y.append(ticker_y)
+    for i in range(backcandles, processed_stock.shape[0] - futurecandles):
+        X.append(processed_stock[i-backcandles:i, :8])
+        y.append(processed_stock[i:i + futurecandles, 3])  # Assuming column 3 is the target
 
-        # Add X and y lists to each of the ticker dictionaries
-        split_stock[ticker] = {'X': ticker_X, 'y': ticker_y}
+    X = np.array(X)
+    y = np.array(y)
+    y = np.reshape(y, (y.shape[0], futurecandles))
 
-    return split_stock, backcandles, futurecandles
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size= 0.2, shuffle=False)
+
+    return X_train, X_test, y_train, y_test, backcandles, futurecandles
