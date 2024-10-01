@@ -27,8 +27,10 @@ def ProcessData(data):
     unscaled_data = ProcessedStock(data)
     processed_stock = unscaled_data.process_stock_data(data)
 
+    # days back and days ahead
     backcandles = 48 # Will use 12 days of back candles hourly as there is 7 hrs per day in market
     futurecandles = 7
+
 
     X = []
     y = []

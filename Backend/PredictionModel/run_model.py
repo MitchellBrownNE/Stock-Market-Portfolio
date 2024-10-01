@@ -2,7 +2,6 @@ import stock_api
 import preprocessing
 from keras import layers, models
 import keras
-import keras_tuner as kt
 
 tickers = ["TSLA"]
 

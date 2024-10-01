@@ -1,7 +1,6 @@
 from datetime import datetime
 import yfinance as yf
 
-
 # Stock class that will modularize downloads and allow objects that are pandas dataframes
 class Stock:
     #Object initializer with ticker as identifier

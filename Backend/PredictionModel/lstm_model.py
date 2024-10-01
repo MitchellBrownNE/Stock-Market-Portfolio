@@ -44,4 +44,5 @@ class LSTMmodel:
         self.build_model()
         self.train_model()
         self.evaluate_model()
+        
 #USE KERAS TUNER 
