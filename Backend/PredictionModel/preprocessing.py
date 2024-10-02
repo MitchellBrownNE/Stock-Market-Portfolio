@@ -1,4 +1,3 @@
-import stock_api
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
 import pandas_ta as ta
@@ -7,6 +6,8 @@ import numpy as np
 class ProcessedStock:
     def __init__(self, data):
         self.data = data
+        self.feature_scaler = None
+        self.target_scaler = None
 
     def process_stock_data(self, data):
         # Cleaning the data by dropping specific columns and adding in moving averages and dropping
@@ -18,14 +19,25 @@ class ProcessedStock:
         data["TargetNextClose"] = data["Adj Close"].shift(-1)
         data.dropna(inplace=True)
 
-        scaler = StandardScaler()
-        self.data = scaler.fit_transform(data)
+        # Separate features and targets for scaling
+        features = data[['Open', 'High', 'Low', 'Adj Close', 'RSI', 'EMAF', 'EMAM', 'EMAS']]
+        target = data[['TargetNextClose']]
+
+        # Initialize the scalers to the object
+        self.feature_scaler = StandardScaler()
+        self.target_scaler = StandardScaler()
+
+        # Scale both features and targets
+        scaled_features = self.feature_scaler.fit_transform(features)
+        scaled_target = self.target_scaler.fit_transform(target)
+
+        self.data = np.hstack((scaled_features, scaled_target))
 
         return self.data
 
 def ProcessData(data):
-    unscaled_data = ProcessedStock(data)
-    processed_stock = unscaled_data.process_stock_data(data)
+    scaled_data = ProcessedStock(data)
+    processed_stock = scaled_data.process_stock_data(data)
 
     # days back and days ahead
     backcandles = 48 # Will use 12 days of back candles hourly as there is 7 hrs per day in market
@@ -35,9 +47,10 @@ def ProcessData(data):
     X = []
     y = []
 
+    # Appending the 
     for i in range(backcandles, processed_stock.shape[0] - futurecandles):
         X.append(processed_stock[i-backcandles:i, :8])
-        y.append(processed_stock[i:i + futurecandles, 3])  # Assuming column 3 is the target
+        y.append(processed_stock[i:i + futurecandles, 3])   
 
     X = np.array(X)
     y = np.array(y)
@@ -45,4 +58,4 @@ def ProcessData(data):
 
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size= 0.2, shuffle=False)
 
-    return X_train, X_test, y_train, y_test, backcandles, futurecandles
+    return X_train, X_test, y_train, backcandles, scaled_data.target_scaler
