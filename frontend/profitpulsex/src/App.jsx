@@ -5,40 +5,45 @@ import LoginPage from "./pages/login";
 import Dashboard from "./pages/dashboard";
 import Navbar from './component/Navbar';
 import ForgotPassword from "./pages/ForgotPassword";
-import ResetPassword from "./pages/ResetPassword";
-
+import AuthAction from "./pages/AuthAction";  // Correct import with the same case
+import EmailVerification from './pages/EmailVerification'; // Import the EmailVerification component
 
 function AppContent() {
   const location = useLocation();
+  
+  const hideNavbarRoutes = [
+    "/login",
+    "/register",
+    "/",
+    "/forgot-password",
+    "/AuthAction", // Fix: added comma
+    "/verify-email" // Fix: added correct path
+  ];
 
-const hideNavbarRoutes = ["/login", "/register", "/", "/forgot-password", "/reset-password"];
-
-const showNavbar = !hideNavbarRoutes.includes(location.pathname);
-
-
+  const showNavbar = !hideNavbarRoutes.includes(location.pathname);
 
   return (
-    <> 
-    {showNavbar && <Navbar />}  {/* Conditionally render Navbar */}
+    <>
+      {showNavbar && <Navbar />} {/* Conditionally render Navbar */}
       <Routes>
         <Route path="/" element={<StarterPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} /> {/* Add Forgot Password Route */}
-        <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/AuthAction" element={<AuthAction />} /> 
+        <Route path="/verify-email" element={<EmailVerification />} />
       </Routes>
-      </>
+    </>
   );
 }
 
 function App() {
   return (
     <Router>
-      <AppContent />  {/* Render AppContent, which controls the Navbar and Routes */}
+      <AppContent />
     </Router>
   );
 }
-
 
 export default App;
