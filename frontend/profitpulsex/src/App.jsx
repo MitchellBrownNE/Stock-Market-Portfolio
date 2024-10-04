@@ -6,6 +6,7 @@ import Dashboard from "./pages/dashboard";
 import Navbar from './component/Navbar';
 import ForgotPassword from "./pages/ForgotPassword";
 import AuthAction from "./pages/AuthAction";  // Correct import with the same case
+import EmailVerification from './pages/EmailVerification'; // Import the EmailVerification component
 
 function AppContent() {
   const location = useLocation();
@@ -15,7 +16,8 @@ function AppContent() {
     "/register",
     "/",
     "/forgot-password",
-    "/AuthAction"  // Match the route path to the capitalized one
+    "/AuthAction", // Fix: added comma
+    "/verify-email" // Fix: added correct path
   ];
 
   const showNavbar = !hideNavbarRoutes.includes(location.pathname);
@@ -29,7 +31,8 @@ function AppContent() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/AuthAction" element={<AuthAction />} /> {/* Centralized Auth Action Route with capitalized path */}
+        <Route path="/AuthAction" element={<AuthAction />} /> 
+        <Route path="/verify-email" element={<EmailVerification />} />
       </Routes>
     </>
   );

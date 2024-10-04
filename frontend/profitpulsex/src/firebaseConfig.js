@@ -1,7 +1,7 @@
 import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
+import { getAuth, applyActionCode, verifyPasswordResetCode, confirmPasswordReset } from "firebase/auth"; // Import the required functions
 
-// firebase authentication keys
+// Firebase configuration
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
   authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
@@ -11,8 +11,11 @@ const firebaseConfig = {
   appId: import.meta.env.VITE_FIREBASE_APP_ID,
 };
 
-// initialize firebase
+// Initialize Firebase app
 const app = initializeApp(firebaseConfig);
 
-// export firebase authentication instance
+// Initialize Firebase auth
 export const auth = getAuth(app);
+
+// Export the necessary Firebase functions
+export { applyActionCode, verifyPasswordResetCode, confirmPasswordReset };
