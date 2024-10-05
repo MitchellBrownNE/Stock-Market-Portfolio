@@ -53,6 +53,7 @@ function Dashboard() {
   const [percentChange, setPercentChange] = useState(null); // State for percent change
   const [predictedPrice, setPredictedPrice] = useState(null); // State for predicted price
   const [error, setError] = useState(null);
+  const [selectedStock, setSelectedStock] = useState("TSLA");
 
   const fetchStocks = async (symbol) => {
     try {
@@ -81,6 +82,7 @@ function Dashboard() {
   };
 
   const handleCardClick = (symbol) => {
+    setSelectedStock(symbol);
     fetchStocks(symbol);
   };
 
@@ -111,9 +113,9 @@ function Dashboard() {
         {/* Chart on the left side */}
         <div className="col-span-3 row-span-7">
           <Card>
-            {/* Chart Content */}
-            Chart
-            <Chart />
+            {/* Pass selected stock to the Chart component */}
+            <Chart symbol={selectedStock} />{" "}
+            {/* Chart updates based on selected stock */}
           </Card>
         </div>
         {/* Stock Price and Predicted Price on the right */}
