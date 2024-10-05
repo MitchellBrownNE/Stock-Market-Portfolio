@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from "react";
 import Card from "./components/card";
+import Chart from "../component/Chart";
 
 // Function to fetch stock profile data
 const fetchStockData = async (symbol) => {
-  const apiKey = 'crnnk0hr01qt44di7ng0crnnk0hr01qt44di7ngg'; // Replace with your actual Finnhub API key
-  const response = await fetch(`https://finnhub.io/api/v1/stock/profile2?symbol=${symbol}&token=${apiKey}`);
+  const apiKey = "crnnk0hr01qt44di7ng0crnnk0hr01qt44di7ngg";
+  const response = await fetch(
+    `https://finnhub.io/api/v1/stock/profile2?symbol=${symbol}&token=${apiKey}`
+  );
 
   if (!response.ok) {
     throw new Error("Network response was not ok");
@@ -16,8 +19,10 @@ const fetchStockData = async (symbol) => {
 
 // Function to fetch current stock price
 const fetchCurrentPrice = async (symbol) => {
-  const apiKey = 'crnnk0hr01qt44di7ng0crnnk0hr01qt44di7ngg'; // Replace with your actual Finnhub API key
-  const response = await fetch(`https://finnhub.io/api/v1/quote?symbol=${symbol}&token=${apiKey}`);
+  const apiKey = "crnnk0hr01qt44di7ng0crnnk0hr01qt44di7ngg";
+  const response = await fetch(
+    `https://finnhub.io/api/v1/quote?symbol=${symbol}&token=${apiKey}`
+  );
 
   if (!response.ok) {
     throw new Error("Network response was not ok");
@@ -29,14 +34,16 @@ const fetchCurrentPrice = async (symbol) => {
 
 // Function to fetch predicted price from Python API
 const fetchPredictedPrice = async (symbol) => {
-  const response = await fetch(`http://127.0.0.1:5000/api/predict?symbol=${symbol}`); // Pass symbol to API
+  const response = await fetch(
+    `http://127.0.0.1:5000/api/predict?symbol=${symbol}`
+  ); // Pass symbol to API
 
   if (!response.ok) {
     throw new Error("Failed to fetch predicted price from API");
   }
 
   const data = await response.json();
-  return data.predicted_price; // Adjust based on your API response structure
+  return data.predicted_price;
 };
 
 function Dashboard() {
@@ -81,37 +88,50 @@ function Dashboard() {
     <>
       <div className="h-screen grid grid-cols-4 grid-rows-6 gap-4 p-10 font-quicksand relative bg-bgdark">
         {/* Tesla, GM, Ford buttons */}
-        <div className="col-span-1 row-span-1" onClick={() => handleCardClick("TSLA")}>
+        <div
+          className="col-span-1 row-span-1"
+          onClick={() => handleCardClick("TSLA")}
+        >
           <Card>Tesla</Card>
         </div>
-        <div className="col-span-1 row-span-1" onClick={() => handleCardClick("GM")}>
+        <div
+          className="col-span-1 row-span-1"
+          onClick={() => handleCardClick("GM")}
+        >
           <Card>GM</Card>
         </div>
-        <div className="col-span-1 row-span-1" onClick={() => handleCardClick("F")}>
+        <div
+          className="col-span-1 row-span-1"
+          onClick={() => handleCardClick("F")}
+        >
           <Card>Ford</Card>
         </div>
-        <div className="col-span-1 row-span-1"></div> {/* Empty space to align */}
-
+        <div className="col-span-1 row-span-1"></div>{" "}
+        {/* Empty space to align */}
         {/* Chart on the left side */}
         <div className="col-span-3 row-span-7">
           <Card>
             {/* Chart Content */}
             Chart
+            <Chart />
           </Card>
         </div>
-
         {/* Stock Price and Predicted Price on the right */}
         <div className="col-span-1 row-span-1">
           <Card>
-            Stock Price: {currentPrice !== null ? `$${currentPrice} (${priceChange} (${percentChange}%) today)` : "Select a stock"}
+            Stock Price:{" "}
+            {currentPrice !== null
+              ? `$${currentPrice} (${priceChange} (${percentChange}%) today)`
+              : "Select a stock"}
           </Card>
         </div>
         <div className="col-span-1 row-span-1">
           <Card>
-            Predicted Price: {predictedPrice !== null ? `$${predictedPrice}` : "N/A"} {/* Correctly using predictedPrice */}
+            Predicted Price:{" "}
+            {predictedPrice !== null ? `$${predictedPrice}` : "N/A"}{" "}
+            {/* Correctly using predictedPrice */}
           </Card>
         </div>
-
         {/* Details below Stock Price and Predicted Price */}
         <div className="col-span-1 row-span-5">
           <Card>
