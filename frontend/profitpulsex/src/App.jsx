@@ -7,6 +7,7 @@ import Navbar from './component/Navbar';
 import ForgotPassword from "./pages/ForgotPassword";
 import AuthAction from "./pages/AuthAction";  // Correct import with the same case
 import EmailVerification from './pages/EmailVerification'; // Import the EmailVerification component
+import ProtectedRoute from './component/ProtectedRoute'; // Import the ProtectedRoute component
 
 function AppContent() {
   const location = useLocation();
@@ -29,10 +30,19 @@ function AppContent() {
         <Route path="/" element={<StarterPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/AuthAction" element={<AuthAction />} /> 
         <Route path="/verify-email" element={<EmailVerification />} />
+
+        {/* Protect the dashboard route */}
+        <Route 
+          path="/dashboard" 
+          element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          } 
+        />
       </Routes>
     </>
   );
