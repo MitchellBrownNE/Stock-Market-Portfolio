@@ -28,8 +28,3 @@ def build_train_predict_model():
         future_candles_unscaled = target_scaler.inverse_transform(future_candles_scaled.reshape(-1, 1)).flatten()
 
         yield ticker, future_candles_unscaled
-
-
-if __name__ == '__main__':
-    for ticker, future_candles in build_train_predict_model():
-        print(f"Future candles for {ticker}: {future_candles}")
