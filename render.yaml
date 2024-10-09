@@ -1,2 +1,2 @@
-buildCommand: npx vite build
-publishDir: Frontend/profitpulsex/dist
+buildCommand: npm install && npx vite build
+publishDir: Frontend/profitpulsex
