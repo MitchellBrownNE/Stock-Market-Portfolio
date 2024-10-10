@@ -1,19 +1,26 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { auth, applyActionCode, verifyPasswordResetCode, confirmPasswordReset } from "../firebaseConfig"; // Import Firebase functions
+import {
+  auth,
+  applyActionCode,
+  verifyPasswordResetCode,
+  confirmPasswordReset,
+} from "../firebaseConfig"; // Import Firebase functions
 
 function AuthAction() {
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(true);
   const [newPassword, setNewPassword] = useState(""); // For password reset
   const [confirmPassword, setConfirmPassword] = useState(""); // For password reset
+  const [passwordVisible, setPasswordVisible] = useState(false); // Toggle visibility
+  const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
   useEffect(() => {
     const mode = searchParams.get("mode"); // Get the mode (resetPassword, verifyEmail)
     const oobCode = searchParams.get("oobCode"); // Get the oobCode (one-time code from Firebase)
-    
+
     if (!mode || !oobCode) {
       setMessage("Invalid action URL.");
       setLoading(false);
@@ -53,11 +60,24 @@ function AuthAction() {
     }
   };
 
-  const handlePasswordReset = async () => {
+  const validatePassword = (password) => {
+    const capitalAndNum = /^(?=.*[A-Z])(?=.*\d).+$/;
+    return capitalAndNum.test(password);
+  };
+
+  const handlePasswordReset = async (e) => {
+    e.preventDefault();
     const oobCode = searchParams.get("oobCode");
 
     if (newPassword !== confirmPassword) {
       setMessage("Passwords do not match.");
+      return;
+    }
+
+    if (!validatePassword(newPassword)) {
+      setMessage(
+        "Password must include at least one capital letter and one number."
+      );
       return;
     }
 
@@ -81,26 +101,54 @@ function AuthAction() {
             {searchParams.get("mode") === "resetPassword" ? (
               <>
                 <h2 className="text-4xl font-heading text-black">Reset Password</h2>
-                <input
-                  type="password"
-                  value={newPassword}
-                  onChange={(e) => setNewPassword(e.target.value)}
-                  placeholder="New Password"
-                  className="p-2 border border-black rounded w-full mt-4"
-                />
-                <input
-                  type="password"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  placeholder="Confirm Password"
-                  className="p-2 border border-black rounded w-full mt-4"
-                />
-                <button
-                  onClick={handlePasswordReset}
-                  className="bg-lightgreen text-black text-lg px-6 py-2 rounded-lg mt-8 hover:bg-green-600"
-                >
-                  Reset Password
-                </button>
+                {/* Form wrapping the password inputs */}
+                <form onSubmit={handlePasswordReset}>
+                  <div className="relative w-80 mt-4">
+                    <input
+                      type={passwordVisible ? "text" : "password"}
+                      value={newPassword}
+                      onChange={(e) => setNewPassword(e.target.value)}
+                      placeholder="New Password"
+                      className="p-2 border border-black rounded w-full"
+                      required
+                    />
+                    <button
+                      type="button"
+                      className="absolute inset-y-0 right-2 flex items-center text-sm text-gray-600"
+                      onClick={() => setPasswordVisible(!passwordVisible)}
+                    >
+                      {passwordVisible ? "Hide" : "Show"}
+                    </button>
+                  </div>
+
+                  <div className="relative w-80 mt-4">
+                    <input
+                      type={confirmPasswordVisible ? "text" : "password"}
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      placeholder="Confirm Password"
+                      className="p-2 border border-black rounded w-full"
+                      required
+                    />
+                    <button
+                      type="button"
+                      className="absolute inset-y-0 right-2 flex items-center text-sm text-gray-600"
+                      onClick={() =>
+                        setConfirmPasswordVisible(!confirmPasswordVisible)
+                      }
+                    >
+                      {confirmPasswordVisible ? "Hide" : "Show"}
+                    </button>
+                  </div>
+
+                  <button
+                    type="submit"
+                    className="bg-lightgreen text-black text-lg px-6 py-2 rounded-lg mt-8 hover:bg-green-600"
+                  >
+                    Reset Password
+                  </button>
+                </form>
+                <p className="text-boldred text-black font-body mt-5">{message}</p>
               </>
             ) : (
               <h2 className="text-4xl font-heading text-black">{message}</h2>
@@ -113,4 +161,3 @@ function AuthAction() {
 }
 
 export default AuthAction;
-
