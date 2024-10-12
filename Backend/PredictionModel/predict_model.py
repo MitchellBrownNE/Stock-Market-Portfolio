@@ -2,8 +2,10 @@ import stock_api
 import preprocessing
 from lstm_model import LSTMmodel
 
+from transformer_model import TransformerModel
+
 # Stock tickers
-tickers = ["TSLA", "GM"]
+tickers = ["TSLA"]
 
 
 def build_train_predict_model():
@@ -15,16 +17,27 @@ def build_train_predict_model():
         X_train, X_test, y_train, backcandles, target_scaler = preprocessing.ProcessData(data)
         
         # Give the LSTMmodel object the required parameters to train and run model
-        model = LSTMmodel(X_train, X_test, y_train, backcandles)
-        model.run_model()
+        lstm_model = LSTMmodel(X_train, X_test, y_train, backcandles)
+        lstm_model.run_model()
+
+        transformer_model = TransformerModel(X_train, X_test, y_train, backcandles)
+        transformer_model.run_model()
         
          # Make predictions on the test data
-        predictions = model.model.predict(X_test)
+        lstm_predictions = lstm_model.model.predict(X_test)
+        transformer_predictions = transformer_model.model.predict(X_test)
     
         # Extract the next 7 future targets from the predictions
-        future_candles_scaled = predictions[-1]
+        lstm_future_candles_scaled = lstm_predictions[-1]
+        transformer_future_candles_scaled = transformer_predictions[-1]
     
         # Un-scale the future target predictions
-        future_candles_unscaled = target_scaler.inverse_transform(future_candles_scaled.reshape(-1, 1)).flatten()
+        lstm_future_candles_unscaled = target_scaler.inverse_transform(lstm_future_candles_scaled.reshape(-1, 1)).flatten()
+        transformer_future_candles_unscaled = target_scaler.inverse_transform(transformer_future_candles_scaled.reshape(-1, 1)).flatten()
 
-        yield ticker, future_candles_unscaled
+
+        yield ticker, lstm_future_candles_unscaled, transformer_future_candles_unscaled
+
+if __name__ == "__main__":
+    for ticker, lstm_predictions, transformer_predictions in build_train_predict_model():
+        print(f"Predictions for {ticker}: LSTM: {lstm_predictions} , Transformer: {transformer_predictions}")
