@@ -45,12 +45,15 @@ const Chart = ({ symbol }) => {
     },
   };
 
+  const reversedStockData = [...stockData].reverse();
+  const reversedPredictionData = [...predictionData].reverse();
+
   const data = {
-    labels: stockData.map((data) => data.date),
+    labels: reversedStockData.map((data) => data.date),
     datasets: [
       {
         label: "Actual Closing Prices",
-        data: stockData.map((data) => data.close),
+        data: reversedStockData.map((data) => data.close),
         borderColor: "rgba(75, 192, 192, 1)",
         backgroundColor: "rgba(75, 192, 192, 0.2)",
         tension: 0.3,
@@ -58,7 +61,7 @@ const Chart = ({ symbol }) => {
       },
       {
         label: "Predicted Closing Prices",
-        data: predictionData.map((data) => data.close),
+        data: reversedPredictionData.map((data) => data.close),
         borderColor: "rgba(255, 99, 132, 1)",
         backgroundColor: "rgba(255, 99, 132, 0.2)",
         borderDash: [5, 5],
