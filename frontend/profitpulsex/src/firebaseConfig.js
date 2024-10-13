@@ -1,8 +1,9 @@
 import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
+import { getAuth, applyActionCode, verifyPasswordResetCode, confirmPasswordReset } from "firebase/auth";
 
-// firebase authentication keys
+
+// Firebase configuration
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
   authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
@@ -12,12 +13,15 @@ const firebaseConfig = {
   appId: import.meta.env.VITE_FIREBASE_APP_ID,
 };
 
-// initialize firebase
+// Initialize Firebase app
 const app = initializeApp(firebaseConfig);
 
-// Initialize Cloud Firestore and get a reference to the service
-const db = getFirestore(app);
+// Initialize Firebase app
+const app = initializeApp(firebaseConfig);
 
-// export firebase authentication instance
-export const auth = getAuth(app);
-export { db };
+// Initialize Firestore and Firebase Auth
+const db = getFirestore(app);
+const auth = getAuth(app);
+
+// Export necessary Firebase functions
+export { db, auth, applyActionCode, verifyPasswordResetCode, confirmPasswordReset };

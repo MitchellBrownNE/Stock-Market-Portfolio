@@ -1,105 +1,45 @@
-import sys
-import io
-import time
+import os
+os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
+
+import preprocessing
+import keras as keras
 import numpy as np
-import pandas as pd
-import yfinance as yf
-import datetime as dt
-from sklearn.preprocessing import MinMaxScaler
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense, Dropout, LSTM
-from tensorflow.keras.callbacks import EarlyStopping
-from flask import Flask, jsonify, request
-from flask_cors import CORS  # Import CORS
+from sklearn.model_selection import train_test_split
 
-# Set encoding to utf-8
-sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
+# LSTM model class that will handle the preparing, building, training, and running the model. 
+class LSTMmodel:
+    def __init__(self, X_train, X_test, y_train, backcandles):
+        self.X_train = X_train
+        self.X_test = X_test
+        self.y_train = y_train
+        self.backcandles = backcandles
+        self.model = None
 
-app = Flask(__name__)
-CORS(app)  # Enable CORS for all routes
+    # Builds the model based off of all the features and predicts 7 hours ahead. 
+    def build_model(self):
+        features = ['Open', 'High', 'Low', 'Adj Close', 'RSI', 'EMAF', 'EMAM', 'EMAL']
 
-# Function to prepare LSTM model
-def prepare_model(company, start, end):
-    try:
-        data = yf.download(company, start=start, end=end)
-    except Exception as e:
-        print(f"Error fetching data: {e}")
-        return None, None, None
+        self.model = keras.models.Sequential()
 
-    # Prepare data for model
-    scaler = MinMaxScaler(feature_range=(0, 1))
-    scaled_data = scaler.fit_transform(data['Close'].values.reshape(-1, 1))
+        # Add layers that have 160 and 128 neutrons respectively, and have a dropout rate of 10%, and
+        # batch normalize after the relu activation. 
+        self.model.add(keras.Input(shape=(self.backcandles, len(features))))
+        self.model.add(keras.layers.Bidirectional(keras.layers.LSTM(units=160, return_sequences=True)))
+        self.model.add(keras.layers.Dropout(rate=0.1))
+        self.model.add(keras.layers.Bidirectional(keras.layers.LSTM(units=128, return_sequences=False)))
+        
+        self.model.add(keras.layers.Dense(units=64, activation='relu'))
+        self.model.add(keras.layers.BatchNormalization())
+        self.model.add(keras.layers.Dense(units=7))
 
-    prediction_days = 60
-    x_train = []
-    y_train = []
+        self.model.compile(loss='mse', optimizer=keras.optimizers.Adam())
 
-    for x in range(prediction_days, len(scaled_data)):
-        x_train.append(scaled_data[x - prediction_days:x, 0])
-        y_train.append(scaled_data[x, 0])
+    # Training the model to fit with 20% validation
+    def train_model(self):
+        self.model.fit(self.X_train, self.y_train, epochs=20, batch_size=30, validation_split=0.2)
 
-    x_train, y_train = np.array(x_train), np.array(y_train)
-    x_train = np.reshape(x_train, (x_train.shape[0], x_train.shape[1], 1))
 
-    # Build LSTM model
-    model = Sequential()
-    model.add(LSTM(units=100, return_sequences=True, input_shape=(x_train.shape[1], 1)))
-    model.add(Dropout(0.2))
-    model.add(LSTM(units=100, return_sequences=True))
-    model.add(Dropout(0.2))
-    model.add(LSTM(units=100))
-    model.add(Dropout(0.2))
-    model.add(Dense(units=1))
-
-    model.compile(optimizer='adam', loss='mean_squared_error')
-
-    # Early stopping to prevent overfitting
-    early_stopping = EarlyStopping(monitor='loss', patience=5)
-
-    # Fit the model
-    model.fit(x_train, y_train, epochs=50, batch_size=32, verbose=0, callbacks=[early_stopping])
-
-    return model, scaler, data
-
-# Function to predict the next price
-def predict_next_price(model, scaler, data):
-    total_dataset = data['Close']
-    model_inputs = total_dataset[len(total_dataset) - len(data) - 60:].values
-    model_inputs = model_inputs.reshape(-1, 1)
-    model_inputs = scaler.transform(model_inputs)
-
-    real_data = [model_inputs[len(model_inputs) - 60:len(model_inputs), 0]]
-    real_data = np.array(real_data)
-    real_data = np.reshape(real_data, (real_data.shape[0], real_data.shape[1], 1))
-
-    prediction = model.predict(real_data)
-    prediction = prediction.reshape(-1, 1)  # Reshape for inverse transformation
-    prediction = scaler.inverse_transform(prediction)
-
-    return prediction[0][0]
-
-# API route to get predicted price
-@app.route('/api/predict', methods=['GET'])
-def get_prediction():
-    # Get the company symbol from the request's query parameter
-    company = request.args.get('symbol')
-    if not company:
-        return jsonify({'error': 'No company symbol provided'}), 400
-
-    start = dt.datetime(2024, 3, 3)  # Example start date
-    end = dt.datetime.now()  # Current date for prediction
-
-    # Prepare the model and get the prediction
-    model, scaler, data = prepare_model(company, start, end)
-    if model is None:
-        return jsonify({'error': 'Failed to prepare model'}), 500
-
-    predicted_price = predict_next_price(model, scaler, data)
-
-    # Convert predicted price from np.float32 to Python float for JSON serialization
-    predicted_price = np.float32(predicted_price).item()
-
-    return jsonify({'predicted_price': f"{predicted_price:.2f}"})
-
-if __name__ == '__main__':
-    app.run(debug=True)
+    # Run all the functions to create the model
+    def run_model(self):
+        self.build_model()
+        self.train_model()

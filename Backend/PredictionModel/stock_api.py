@@ -1,22 +1,33 @@
 from datetime import datetime
 import yfinance as yf
 
-#Data downloader from Yahoo Finance that returns a dictionary to be used.
-def DownloadData():
+# Stock class that will modularize downloads and allow objects that are pandas dataframes
+class Stock:
+    #Object initializer with ticker as identifier
+    def __init__(self,ticker):
+        self.ticker = ticker
+        self.data = None
 
-    # Define the ticker symbol
-    ticker = ["TSLA", "F", "GM"]
-    stockData = {}
+    # Will download the API data with 1 hour intervals and dropping adjusted close
+    def download_data(self, start, end, interval='1h'):
+        try:
+            self.data = yf.download(self.ticker, start=start, end=end, interval=interval)
+
+        # Will catch exception and print off what exception when downloading
+        except Exception as e:
+            print(f"Error downloading data for {self.ticker}: {e}")
+
+        return self.data
+
+def DownloadData(ticker):
 
     # Start and end times for downloading data
     end = datetime.now()
-    start = datetime(end.year - 1, end.month, end.day)
+    # Need to make it so it will just be 1yr and 8months previous instead of subtracting to avoid
+    # negative numbers.
+    start = datetime(end.year - 1, end.month - 8, end.day)
 
-    for stock in ticker:
-        data = yf.download(stock, start=start,end=end, interval='1h')
-        stockData[stock] = data
+    stock = Stock(ticker)
+    stock_data = stock.download_data(start=start, end=end)
 
-    for stock in stockData:
-        stockData[stock].drop(columns=['Adj Close'], inplace=True)
-    
-    return stockData
+    return stock_data
