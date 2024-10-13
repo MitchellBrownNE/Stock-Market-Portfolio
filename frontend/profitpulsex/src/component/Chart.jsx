@@ -1,6 +1,5 @@
 import React from "react";
 import { Line } from "react-chartjs-2";
-import useStockData from "../hooks/useStockData";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -11,8 +10,9 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
+import useStockData from "../hooks/useStockData";
 
-// register Chart.js components
+// register  chart.js components
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -26,46 +26,46 @@ ChartJS.register(
 const Chart = ({ symbol }) => {
   const { stockData, loading, error } = useStockData(symbol);
 
-  // prepare chart data for last 7 days
-  const chartData = {
-    labels: stockData.map((data) => data.date),
-    datasets: [
-      {
-        label: `${symbol} Closing Prices`,
-        //closing prices
-        data: stockData.map((data) => parseFloat(data.close)),
-        // line color
-        borderColor: "rgba(75, 192, 192, 1)",
-        // fill color
-        backgroundColor: "rgba(75, 192, 192, 0.2)",
-        // line smoothing
-        tension: 0.4,
-      },
-    ],
-  };
+  // place holder prediction data
+  const predictionData = stockData.map((data, index) => ({
+    ...data,
+    close: (parseFloat(data.close) * 1.1).toFixed(2),
+  }));
 
-  // chart options
   const options = {
     responsive: true,
     plugins: {
       legend: {
+        position: "top",
+      },
+      title: {
         display: true,
+        text: `${symbol} Stock Prices`,
       },
     },
-    scales: {
-      x: {
-        title: {
-          display: true,
-          text: "Date",
-        },
+  };
+
+  const data = {
+    labels: stockData.map((data) => data.date),
+    datasets: [
+      {
+        label: "Actual Closing Prices",
+        data: stockData.map((data) => data.close),
+        borderColor: "rgba(75, 192, 192, 1)",
+        backgroundColor: "rgba(75, 192, 192, 0.2)",
+        tension: 0.3,
+        fill: false,
       },
-      y: {
-        title: {
-          display: true,
-          text: "Closing Price (USD)",
-        },
+      {
+        label: "Predicted Closing Prices",
+        data: predictionData.map((data) => data.close),
+        borderColor: "rgba(255, 99, 132, 1)",
+        backgroundColor: "rgba(255, 99, 132, 0.2)",
+        borderDash: [5, 5],
+        tension: 0.3,
+        fill: false,
       },
-    },
+    ],
   };
 
   return (
@@ -74,7 +74,7 @@ const Chart = ({ symbol }) => {
       {loading && <p>Loading stock data...</p>}
       {error && <p className="text-red-500">{error}</p>}
       {!loading && !error && stockData.length > 0 && (
-        <Line data={chartData} options={options} />
+        <Line options={options} data={data} />
       )}
     </div>
   );
