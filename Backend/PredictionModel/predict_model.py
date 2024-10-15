@@ -1,8 +1,8 @@
-import stock_api
-import preprocessing
-from lstm_model import LSTMmodel
-
-from transformer_model import TransformerModel
+from . import stock_api
+from . import preprocessing
+from .lstm_model import LSTMmodel
+from .transformer_model import TransformerModel
+import json
 
 # Stock tickers
 tickers = ["TSLA"]
@@ -38,6 +38,14 @@ def build_train_predict_model():
 
         yield ticker, lstm_future_candles_unscaled, transformer_future_candles_unscaled
 
-if __name__ == "__main__":
+def prediction_to_json():
+    stock_predictions = {}
+
     for ticker, lstm_predictions, transformer_predictions in build_train_predict_model():
-        print(f"Predictions for {ticker}: LSTM: {lstm_predictions} , Transformer: {transformer_predictions}")
+        stock_predictions[ticker] = {
+            "lstm_predictions": lstm_predictions.tolist(),
+            "transformer_predictions": transformer_predictions.tolist()
+        }
+
+    stock_predictions_json = json.dumps(stock_predictions)
+    return stock_predictions_json
