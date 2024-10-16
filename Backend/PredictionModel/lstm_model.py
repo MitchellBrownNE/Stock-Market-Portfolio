@@ -1,8 +1,6 @@
 import os
 os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
-
 import keras as keras
-import numpy as np
 from sklearn.model_selection import train_test_split
 
 # LSTM model class that will handle the preparing, building, training, and running the model. 
@@ -26,11 +24,14 @@ class LSTMmodel:
         self.model.add(keras.layers.Bidirectional(keras.layers.LSTM(units=160, return_sequences=True)))
         self.model.add(keras.layers.Dropout(rate=0.1))
         self.model.add(keras.layers.Bidirectional(keras.layers.LSTM(units=128, return_sequences=False)))
-        
+
+        # Using a 64 layer that uses relu for activation, then normalizes the data to allow the model to create a
+        # dense layer that outputs 7 values which are the predictions
         self.model.add(keras.layers.Dense(units=64, activation='relu'))
         self.model.add(keras.layers.BatchNormalization())
         self.model.add(keras.layers.Dense(units=7))
 
+        # After training, the model compiles using mean squared error as the loss value and uses Adam optimizer 
         self.model.compile(loss='mse', optimizer=keras.optimizers.Adam())
 
     # Training the model to fit with 20% validation
