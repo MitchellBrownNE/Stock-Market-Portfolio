@@ -1,7 +1,11 @@
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
-import { getAuth, applyActionCode, verifyPasswordResetCode, confirmPasswordReset } from "firebase/auth";
-
+import {
+  getAuth,
+  applyActionCode,
+  verifyPasswordResetCode,
+  confirmPasswordReset,
+} from "firebase/auth";
 
 // Firebase configuration
 const firebaseConfig = {
@@ -16,12 +20,15 @@ const firebaseConfig = {
 // Initialize Firebase app
 const app = initializeApp(firebaseConfig);
 
-// Initialize Firebase app
-const app = initializeApp(firebaseConfig);
-
 // Initialize Firestore and Firebase Auth
 const db = getFirestore(app);
 const auth = getAuth(app);
 
 // Export necessary Firebase functions
-export { db, auth, applyActionCode, verifyPasswordResetCode, confirmPasswordReset };
+export {
+  db,
+  auth,
+  applyActionCode,
+  verifyPasswordResetCode,
+  confirmPasswordReset,
+};
