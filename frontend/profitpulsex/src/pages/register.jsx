@@ -12,6 +12,9 @@ function Register() {
   const [loading, setLoading] = useState(false);
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
+  const [messageType, setMessageType] = useState("");
+  const [showPasswordRequirements, setShowPasswordRequirements] =
+    useState(false);
 
   const navigate = useNavigate();
 
@@ -42,13 +45,16 @@ function Register() {
     try {
       // verify both password are identical - strict inequality
       if (password !== confirmPassword) {
+        setMessageType("error");
         setMessage("Passwords do not match. Please try again.");
+
         setLoading(false);
         return;
       }
 
       // validate password strength (capital letter and number)
       if (!validatePassword(password)) {
+        setMessageType("error");
         setMessage(
           "Password must include at least one capital letter and one number."
         );
@@ -62,6 +68,7 @@ function Register() {
         email,
         password
       );
+      setMessageType("success");
       const user = userCredential.user;
 
       setMessage(` Successfully Registered!`);
@@ -72,6 +79,7 @@ function Register() {
       }, 3000);
     } catch (error) {
       // set custom error message from errorMessage function
+      setMessageType("error");
       const customMessage = errorMessage(error.code);
       setMessage(customMessage);
       setLoading(false);
@@ -99,6 +107,8 @@ function Register() {
             <input
               type={passwordVisible ? "text" : "password"}
               value={password}
+              onFocus={() => setShowPasswordRequirements(true)}
+              onBlur={() => setShowPasswordRequirements(true)}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Password"
               className="p-2 border border-black rounded w-full"
@@ -116,6 +126,8 @@ function Register() {
             <input
               type={confirmPasswordVisible ? "text" : "password"}
               value={confirmPassword}
+              onFocus={() => setShowPasswordRequirements(true)}
+              onBlur={() => setShowPasswordRequirements(true)}
               onChange={(e) => setConfirmPassword(e.target.value)}
               placeholder="Confirm Password"
               className="p-2 border border-black rounded w-full"
@@ -128,7 +140,24 @@ function Register() {
               {confirmPasswordVisible ? "Hide" : "Show"}
             </button>
           </div>
-          <p className="text-boldred  font-body mt-5">{message}</p>
+          <p
+            className={`mt-5 font-body text-center ${
+              messageType === "success" ? "text-green-500" : "text-red-500"
+            }`}
+          >
+            {message}
+          </p>
+          {/* Password Requirements List */}
+          {showPasswordRequirements && (
+            <div className="text-black mt-5">
+              <h3 className="text-xl mb-2">Password Requirements:</h3>
+              <ul className="list-disc list-inside text-left text-lg">
+                <li>At least 6 characters long</li>
+                <li>At least one capital letter</li>
+                <li>At least one number</li>
+              </ul>
+            </div>
+          )}
           {/* call registerUser when button is clicked*/}
           <button
             className="bg-lightgreen font-body text-black  text-lg px-6 py-2 rounded-lg hover:bg-lightgreen focus:outline-none mt-10"
@@ -139,23 +168,11 @@ function Register() {
           </button>
           {/* Already Have an Account Button */}
           <button
-            className="mt-8 text-white text-lg font-body text-black hover:text-gray-300 focus:outline-none"
+            className="mt-8 text-lg text-black hover:text-gray-300 focus:outline-none"
             onClick={() => navigate("/login")}
           >
             Already have an account? Log in
           </button>
-
-          {/* Password Requirements List */}
-          <div className="text-white mt-20">
-            <h3 className="text-xl mb-2 text-black font-body">
-              Password Requirements:
-            </h3>
-            <ul className="list-disc list-inside text-left text-lg text-black font-body">
-              <li>At least 6 characters long</li>
-              <li>At least one capital letter</li>
-              <li>At least one number</li>
-            </ul>
-          </div>
         </div>
       </div>
     </div>
