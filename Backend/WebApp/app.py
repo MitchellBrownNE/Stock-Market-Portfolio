@@ -36,12 +36,13 @@ def not_found(e):
 @app.route('/api/predict', methods = ['GET'])
 def predict():
     symbol = request.args.get('symbol')
-
-    preds_json = predict_model.prediction_to_json()
+    prediction_model = predict_model.PredictionModel(symbol)
+    prediction_model.build_train_predict_model()
+    preds_json = prediction_model.prediction_to_json()
     preds = json.loads(preds_json)
 
     
     return jsonify({
         "symbol": symbol,
-        "predicted_price": preds[symbol]["lstm_predictions"]
+        "predicted_price": preds[symbol]["lstm_predictions"][0]
     })
