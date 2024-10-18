@@ -14,7 +14,8 @@ static_folder_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..
 # Initialize the Flask application
 app = Flask(__name__, static_url_path='', static_folder=static_folder_path)
 
-# Serve the React app
+# Serve the React app by setting the proper default path and returning the proper directory that is required by
+# the React frontend
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
 def serve(path):
@@ -23,12 +24,13 @@ def serve(path):
     else:
         return send_from_directory(app.static_folder, 'index.html')
 
-# Ignore favicon requests by returning a 204 No Content response
+# Ignore favicon requests by returning a 204 No Content response as it causes issues within webhosting
 @app.route('/favicon.ico')
 def ignore_favicon():
     return '', 204  # 204 No Content
 
-# Handle 404 errors by serving the React app's index.html
+# Handle 404 errors by serving the React app's index.html and returning the index.html file that routes it to the root
+# within React
 @app.errorhandler(404)
 def not_found(e):
     return send_from_directory(app.static_folder, 'index.html')
