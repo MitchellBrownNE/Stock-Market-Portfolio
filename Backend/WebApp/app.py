@@ -3,7 +3,6 @@ import os
 import sys
 import json
 
-
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../Backend')))
 
 from PredictionModel import predict_model,transformer_model,preprocessing,stock_api,lstm_model
