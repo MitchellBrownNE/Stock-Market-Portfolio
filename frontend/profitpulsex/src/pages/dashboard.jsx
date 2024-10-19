@@ -4,27 +4,17 @@ import Card from "./components/card";
 // Function to fetch stock profile data
 const fetchStockData = async (symbol) => {
   const apiKey = 'crnnk0hr01qt44di7ng0crnnk0hr01qt44di7ngg'; // Replace with your actual Finnhub API key
-  const response = await fetch(`https://finnhub.io/api/v1/stock/profile2?symbol=${symbol}&token=${apiKey}`);
+  const response = await fetch(``);
 
-  if (!response.ok) {
-    throw new Error("Network response was not ok");
-  }
-
-  const data = await response.json();
-  return data;
+  return null;
 };
 
 // Function to fetch current stock price
 const fetchCurrentPrice = async (symbol) => {
   const apiKey = 'crnnk0hr01qt44di7ng0crnnk0hr01qt44di7ngg'; // Replace with your actual Finnhub API key
-  const response = await fetch(`https://finnhub.io/api/v1/quote?symbol=${symbol}&token=${apiKey}`);
+  const response = await fetch(``);
 
-  if (!response.ok) {
-    throw new Error("Network response was not ok");
-  }
-
-  const data = await response.json();
-  return data;
+  return null;
 };
 
 // Function to fetch predicted price from Python API
