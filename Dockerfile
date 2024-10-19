@@ -28,4 +28,4 @@ ENV FLASK_RUN_HOST=0.0.0.0
 EXPOSE 5000
 
 # Run the Flask app using Gunicorn with reduced workers
-CMD ["gunicorn", "-w", "2", "-b", "0.0.0.0:5000", "Backend.WebApp.app:app"]
+CMD ["gunicorn", "-w", "1", "-b", "0.0.0.0:5000", "Backend.WebApp.app:app"]
