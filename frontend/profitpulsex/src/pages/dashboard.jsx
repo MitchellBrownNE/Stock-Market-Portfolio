@@ -70,7 +70,7 @@ function Dashboard() {
 
       // Fetch predicted stock price from the Python backend
       const predictedPrice = await fetchPredictedPrice(symbol); // Pass symbol to fetch predicted price
-      setPredictedPrice(predictedPrice); // Set predicted price
+      setPredictedPrice(predictedPrice.toFixed(2)); // Set predicted price
     } catch (err) {
       setError("Failed to fetch stock data.");
       setStockData(null); // Clear previous stock data on error
@@ -130,7 +130,7 @@ function Dashboard() {
         <div className="col-span-1 row-span-1">
           <Card>
             Predicted Price:{" "}
-            {predictedPrice !== null ? `$${predictedPrice}` : "N/A"}{" "}
+            {predictedPrice !== null ? `$${predictedPrice.toFixed(2)}` : "N/A"}{" "}
             {/* Correctly using predictedPrice */}
           </Card>
         </div>
