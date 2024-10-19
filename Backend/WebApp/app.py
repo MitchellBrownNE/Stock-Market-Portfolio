@@ -45,4 +45,5 @@ def predict():
     
     return jsonify({
         "symbol": symbol,
-        "predicted_price": preds[symbol]["lstm_predictions"]    })
+        "predicted_price": preds[symbol]["lstm_predictions"]
+    })
