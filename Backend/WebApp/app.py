@@ -1,5 +1,11 @@
-from flask import Flask, send_from_directory, jsonify
+from flask import Flask, send_from_directory, jsonify, request
 import os
+import sys
+import json
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../Backend')))
+
+from PredictionModel import predict_model,transformer_model,preprocessing,stock_api,lstm_model
 
 # Adjust the path to the static folder based on the main directory on Render
 static_folder_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../Frontend/profitpulsex/dist'))
@@ -27,3 +33,17 @@ def ignore_favicon():
 @app.errorhandler(404)
 def not_found(e):
     return send_from_directory(app.static_folder, 'index.html')
+
+@app.route('/api/predict', methods = ['GET'])
+def predict():
+    symbol = request.args.get('symbol')
+    prediction_model = predict_model.PredictionModel(symbol)
+    prediction_model.build_train_predict_model()
+    preds_json = prediction_model.prediction_to_json()
+    preds = json.loads(preds_json)
+
+    
+    return jsonify({
+        "symbol": symbol,
+        "predicted_price": preds[symbol]["lstm_predictions"][0]
+    })
