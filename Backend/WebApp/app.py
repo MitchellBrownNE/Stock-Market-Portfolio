@@ -47,3 +47,6 @@ def predict():
         "symbol": symbol,
         "predicted_price": preds[symbol]["lstm_predictions"][0]
     })
+
+if __name__ == "__main__":
+    app.run(debug=True)

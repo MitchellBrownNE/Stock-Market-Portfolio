@@ -1,6 +1,10 @@
 import os
 os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
 import keras as keras
+import logging
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 # LSTM model class that will handle the preparing, building, training, and running the model. 
 class LSTMmodel:
@@ -35,9 +39,18 @@ class LSTMmodel:
 
     # Training the model to fit with 20% validation
     def train_model(self):
+        logger.info("Started")
         self.model.fit(self.X_train, self.y_train, epochs=20, batch_size=30, validation_split=0.2)
+        logger.info("Ended")
 
     # Run all the functions to create the model
     def run_model(self):
         self.build_model()
         self.train_model()
+
+
+    def get_logging_callback(self):
+        class LoggingCallback(keras.callbacks.Callback):
+            def on_epoch_end(self, epoch, logs=None):
+                logger.info(f"Epoch {epoch + 1}: {logs}")
+        return LoggingCallback()
