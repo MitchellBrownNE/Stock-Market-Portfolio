@@ -1,2 +1,18 @@
-buildCommand: npm install && npx vite build
-publishDir: Frontend/profitpulsex
+services:
+  - type: web
+    name: frontend
+    env: static
+    staticPublishPath: Frontend/profitpulsex/dist
+    buildCommand: npm install && npm run build
+    startCommand: npm run start
+
+  - type: web
+    name: backend
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn -w 4 -b 0.0.0.0:5000 Backend.WebApp.app:app
+    envVars:
+      - key: FLASK_APP
+        value: Backend/WebApp/app.py
+      - key: FLASK_RUN_HOST
+        value: 0.0.0.0
