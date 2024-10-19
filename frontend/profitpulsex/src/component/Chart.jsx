@@ -29,7 +29,7 @@ const Chart = ({ symbol }) => {
   // place holder prediction data
   const predictionData = stockData.map((data, index) => ({
     ...data,
-    close: (parseFloat(data.close) * 1.1).toFixed(2),
+    close: (parseFloat(data.close) * 1.01).toFixed(2),
   }));
 
   const options = {
