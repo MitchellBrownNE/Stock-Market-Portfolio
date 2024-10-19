@@ -29,7 +29,7 @@ const fetchCurrentPrice = async (symbol) => {
 
 // Function to fetch predicted price from Python API
 const fetchPredictedPrice = async (symbol) => {
-  const response = await fetch(`http://127.0.0.1:5000/api/predict?symbol=${symbol}`); // Pass symbol to API
+  const response = await fetch(`https://stock-market-portfolio-cnjw.onrender.com/api/predict?symbol=${symbol}`); // Pass symbol to API
 
   if (!response.ok) {
     throw new Error("Failed to fetch predicted price from API");
