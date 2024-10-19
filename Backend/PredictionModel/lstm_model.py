@@ -1,7 +1,6 @@
 import os
 os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
 import keras as keras
-from sklearn.model_selection import train_test_split
 
 # LSTM model class that will handle the preparing, building, training, and running the model. 
 class LSTMmodel:
@@ -37,7 +36,6 @@ class LSTMmodel:
     # Training the model to fit with 20% validation
     def train_model(self):
         self.model.fit(self.X_train, self.y_train, epochs=20, batch_size=30, validation_split=0.2)
-
 
     # Run all the functions to create the model
     def run_model(self):
