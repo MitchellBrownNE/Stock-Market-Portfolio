@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Card from "./components/card";
 import Chart from "../component/Chart";
+import HourlyChart from "../component/HourlyChart";
 
 // Function to fetch stock profile data
 const fetchStockData = async (symbol) => {
@@ -55,6 +56,9 @@ function Dashboard() {
   const [error, setError] = useState(null);
   const [selectedStock, setSelectedStock] = useState("TSLA");
 
+  // New state to track whether the user wants the weekly or hourly chart
+  const [isWeekly, setIsWeekly] = useState(true);
+
   const fetchStocks = async (symbol) => {
     try {
       // Fetch stock profile data
@@ -86,6 +90,11 @@ function Dashboard() {
     fetchStocks(symbol);
   };
 
+  // Function to toggle between weekly and hourly chart
+  const toggleChart = () => {
+    setIsWeekly(!isWeekly);
+  };
+
   return (
     <>
       <div className="h-screen grid grid-cols-4 grid-rows-6 gap-4 p-10 font-quicksand relative bg-bgdark">
@@ -113,9 +122,19 @@ function Dashboard() {
         {/* Chart on the left side */}
         <div className="col-span-3 row-span-7">
           <Card>
-            {/* Pass selected stock to the Chart component */}
-            <Chart symbol={selectedStock} />{" "}
-            {/* Chart updates based on selected stock */}
+            {/* Button to toggle between Weekly and Daily (Hourly) Chart */}
+            <button
+              onClick={toggleChart}
+              className="bg-lightgreen font-body text-black  text-lg px-6 py-2 rounded-lg hover:bg-lightgreen focus:outline-none "
+            >
+              {isWeekly ? "Hourly Chart" : "Weekly Chart"}
+            </button>
+            {/* Conditionally render Chart based on the value of isWeekly */}
+            {isWeekly ? (
+              <Chart symbol={selectedStock} />
+            ) : (
+              <HourlyChart symbol={selectedStock} />
+            )}
           </Card>
         </div>
         {/* Stock Price and Predicted Price on the right */}
