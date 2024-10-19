@@ -1,10 +1,11 @@
-from flask import Flask, send_from_directory, jsonify, request
 import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'  # Suppress TensorFlow logs
+from flask import Flask, send_from_directory, jsonify, request
+from flask_cors import CORS
 import sys
 import json
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../Backend')))
-
 from PredictionModel import predict_model
 
 # Adjust the path to the static folder based on the main directory on Render
@@ -12,6 +13,7 @@ static_folder_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..
 
 # Initialize the Flask application
 app = Flask(__name__, static_url_path='', static_folder=static_folder_path)
+CORS(app)
 
 # Serve the React app by setting the proper default path and returning the proper directory that is required by
 # the React frontend
@@ -47,3 +49,6 @@ def predict():
         "symbol": symbol,
         "predicted_price": preds[symbol]["lstm_predictions"]
     })
+
+if __name__ == "__main__":
+    app.run(debug=True)
