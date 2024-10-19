@@ -38,7 +38,7 @@ function Dashboard() {
   const [modalOpen, setModalOpen] = useState(false);
   const [showProfileModal, setShowProfileModal] = useState(false); // State for Profile modal
   const [showSettingsModal, setShowSettingsModal] = useState(false); // State for Settings modal
-  const [sentimentData, setSentimentData] = useState([]);
+  const [sentimentData, setSentimentData] = useState(null); // Initialize sentiment data as null
   const [selectedStocks, setSelectedStocks] = useState([]); // State for selected stocks
 
   const fetchStocks = async (symbol) => {
@@ -72,25 +72,25 @@ function Dashboard() {
   const handlePredictedClick = async () => {
     setModalOpen(true);
     try {
-      const response = await fetch('http://127.0.0.1:5000/api/sentiment', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ ticker: stockData.ticker }), // Pass the current stock's ticker
-      });
+        const response = await fetch('http://127.0.0.1:5000/api/sentiment', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ ticker: stockData.ticker }), // Pass the current stock's ticker
+        });
 
-      if (!response.ok) {
-        throw new Error("Failed to fetch sentiment data.");
-      }
+        if (!response.ok) {
+            throw new Error("Failed to fetch sentiment data.");
+        }
 
-      const data = await response.json();
-      setSentimentData(data); // Store the fetched sentiment data in state
+        const data = await response.json();
+        setSentimentData(data); // Store the fetched sentiment data in state
     } catch (error) {
-      console.error("Error fetching sentiment data:", error);
-      setSentimentData(null); // Clear sentiment data on error
+        console.error("Error fetching sentiment data:", error);
+        setSentimentData(null); // Clear sentiment data on error
     }
-  };
+};
 
   const toggleTheme = () => {
     setTheme(theme === "dark" ? "light" : "dark");
@@ -171,27 +171,34 @@ function Dashboard() {
 
         {/* Modal for predicted stock details */}
         {modalOpen && (
-          <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)}>
-            <h2 className="text-lg font-bold">Predicted Stock Details</h2>
-            {stockData ? (
-              <div>
+    <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)}>
+        <h2 className="text-lg font-bold">Predicted Stock Details</h2>
+        {stockData ? (
+            <div>
                 <p>Name: {stockData.name}</p>
                 <p>Predicted: {stockData.predicted}</p>
                 {sentimentData ? (
-                  <div>
-                    <h3 className="text-md font-bold">Sentiment Analysis</h3>
-                    <p>Overall Sentiment: {sentimentData.overall_sentiment}</p>
-                    <p>Score: {sentimentData.final_score}</p>
-                  </div>
+                    <div>
+                        <h3 className="text-md font-bold">Sentiment Analysis</h3>
+                        <p>Overall Sentiment: {sentimentData.overall_sentiment}</p>
+                        <p>Score: {sentimentData.final_score}</p>
+                        <h3 className="text-md font-bold">Articles</h3>
+                        <ul>
+                            {sentimentData.articles.map((article, index) => (
+                                <li key={index}>{article}</li>
+                            ))}
+                        </ul>
+                    </div>
                 ) : (
-                  <p>No sentiment data available.</p>
+                    <p>No sentiment data available.</p>
                 )}
-              </div>
-            ) : (
-              <p>No data available.</p>
-            )}
-          </Modal>
+            </div>
+        ) : (
+            <p>No data available.</p>
         )}
+    </Modal>
+)}
+
 
         {/* Modal for Profile Page */}
         {showProfileModal && (
