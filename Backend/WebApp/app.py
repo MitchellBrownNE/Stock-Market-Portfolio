@@ -5,7 +5,7 @@ import json
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../Backend')))
 
-from PredictionModel import predict_model,transformer_model,preprocessing,stock_api,lstm_model
+from PredictionModel import predict_model
 
 # Adjust the path to the static folder based on the main directory on Render
 static_folder_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../Frontend/profitpulsex/dist'))
@@ -45,5 +45,4 @@ def predict():
     
     return jsonify({
         "symbol": symbol,
-        "predicted_price": preds[symbol]["lstm_predictions"][0]
-    })
+        "predicted_price": preds[symbol]["lstm_predictions"]    })
