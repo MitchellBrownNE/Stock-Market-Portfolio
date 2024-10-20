@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Card from "./components/card";
+import Card from "../component/card";
 import Chart from "../component/Chart";
 import HourlyChart from "../component/HourlyChart";
 
@@ -97,22 +97,22 @@ function Dashboard() {
 
   return (
     <>
-      <div className="h-screen grid grid-cols-4 grid-rows-6 gap-4 p-10 font-quicksand relative bg-bgdark">
+      <div className="h-screen  grid grid-cols-4 grid-rows-6 gap-4 p-10 font-quicksand relative bg-bgdark">
         {/* Tesla, GM, Ford buttons */}
         <div
-          className="col-span-1 row-span-1"
+          className="col-span-1 row-span-1 text-2xl"
           onClick={() => handleCardClick("TSLA")}
         >
           <Card>Tesla</Card>
         </div>
         <div
-          className="col-span-1 row-span-1"
+          className="col-span-1 row-span-1 text-2xl"
           onClick={() => handleCardClick("GM")}
         >
           <Card>GM</Card>
         </div>
         <div
-          className="col-span-1 row-span-1"
+          className="col-span-1 row-span-1 text-2xl"
           onClick={() => handleCardClick("F")}
         >
           <Card>Ford</Card>
