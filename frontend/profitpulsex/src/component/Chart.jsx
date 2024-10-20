@@ -74,6 +74,7 @@ const Chart = ({ symbol }) => {
   return (
     <div className="h-[85%] w-[80%] mx-auto">
       <h2 className="text-2xl font-bold mb-4">{symbol} Stock Prices</h2>
+      <p className="text-sm font-semibold ">Last 7 Open Market Days </p>
       {loading && <p>Loading stock data...</p>}
       {error && <p className="text-red-500">{error}</p>}
       {!loading && !error && stockData.length > 0 && (

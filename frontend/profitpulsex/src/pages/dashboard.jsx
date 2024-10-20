@@ -53,6 +53,9 @@ function Dashboard() {
   const [priceChange, setPriceChange] = useState(null); // State for price change
   const [percentChange, setPercentChange] = useState(null); // State for percent change
   const [predictedPrice, setPredictedPrice] = useState(null); // State for predicted price
+  const [teslaPrice, setTeslaPrice] = useState(null);
+  const [gmPrice, setGmPrice] = useState(null);
+  const [fordPrice, setFordPrice] = useState(null);
   const [error, setError] = useState(null);
   const [selectedStock, setSelectedStock] = useState("TSLA");
 
@@ -90,32 +93,65 @@ function Dashboard() {
     fetchStocks(symbol);
   };
 
+  useEffect(() => {
+    const fetchPrices = async () => {
+      try {
+        const teslaData = await fetchCurrentPrice("TSLA");
+        const gmData = await fetchCurrentPrice("GM");
+        const fordData = await fetchCurrentPrice("F");
+
+        // Set prices with 2 decimal places
+        setTeslaPrice(teslaData.c.toFixed(2));
+        setGmPrice(gmData.c.toFixed(2));
+        setFordPrice(fordData.c.toFixed(2));
+      } catch (err) {
+        console.error("Failed to fetch stock prices", err);
+      }
+    };
+    fetchPrices();
+  }, []);
+
   // Function to toggle between weekly and hourly chart
   const toggleChart = () => {
     setIsWeekly(!isWeekly);
   };
 
   return (
-    <div className=" grid grid-rows-7 gap-4 p-10 font-quicksand relative bg-bgdark">
+    <div className=" grid grid-rows-7 gap-4 p-10 font-body relative bg-bgdark">
       {/* Tesla, GM, Ford buttons */}
       <div className="col-span-4 grid grid-cols-3 gap-4">
         <div
-          className="text-2xl text-center cursor-pointer"
+          className="text-2xl text-center cursor-pointer font-heading"
           onClick={() => handleCardClick("TSLA")}
         >
-          <Card>Tesla</Card>
+          <Card selected={selectedStock === "TSLA"}>
+            <div>Tesla</div>
+            <div className="text-md mt-5">
+              {teslaPrice !== null ? `$${teslaPrice}` : "Loading..."}
+            </div>
+          </Card>
         </div>
         <div
-          className="text-2xl text-center cursor-pointer"
+          className="text-2xl text-center cursor-pointer font-heading"
           onClick={() => handleCardClick("GM")}
         >
-          <Card>GM</Card>
+          <Card selected={selectedStock === "GM"}>
+            <div>GM</div>
+            <div className="text-md mt-5">
+              {gmPrice !== null ? `$${gmPrice}` : "Loading..."}
+            </div>
+          </Card>
         </div>
         <div
-          className="text-2xl text-center cursor-pointer"
+          className="text-2xl text-center cursor-pointer font-heading"
           onClick={() => handleCardClick("F")}
         >
-          <Card>Ford</Card>
+          <Card selected={selectedStock === "F"}>
+            <div>Ford</div>
+            <div className="text-md mt-5">
+              {fordPrice !== null ? `$${fordPrice}` : "Loading..."}
+            </div>
+          </Card>
         </div>
       </div>
 
@@ -124,7 +160,7 @@ function Dashboard() {
           {/* Button to toggle between Weekly and Daily (Hourly) Chart */}
           <button
             onClick={toggleChart}
-            className="bg-lightgreen font-body text-black text-md px-6 py-2 rounded-lg hover:bg-lightgreen focus:outline-none"
+            className="bg-lightgreen font-body text-black text-md px-6 py-2 rounded-lg hover:bg-lightgreen focus:outline-none mb-5"
           >
             {isWeekly ? "Hourly Chart" : "Weekly Chart"}
           </button>
