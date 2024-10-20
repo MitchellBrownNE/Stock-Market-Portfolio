@@ -26,7 +26,7 @@ ChartJS.register(
 const HourlyChart = ({ symbol }) => {
   const { hourlyStockData, loading, error } = useStockData(symbol);
 
-  // Placeholder for predicted data
+  // Placeholder prediction data
   const predictionHourlyData = hourlyStockData.map((data) => ({
     ...data,
     close: (parseFloat(data.close) * 1.001).toFixed(2),
@@ -34,6 +34,7 @@ const HourlyChart = ({ symbol }) => {
 
   const options = {
     responsive: true,
+    maintainAspectRatio: false, // Let it be responsive and take full height/width
     plugins: {
       legend: {
         position: "top",
@@ -56,16 +57,6 @@ const HourlyChart = ({ symbol }) => {
       minute: "2-digit",
     })
   );
-
-  // Get the date from the first item in the hourlyStockData array
-  const displayDate =
-    hourlyStockData.length > 0
-      ? new Date(hourlyStockData[0].time).toLocaleDateString([], {
-          year: "numeric",
-          month: "long",
-          day: "numeric",
-        })
-      : null;
 
   const data = {
     labels: formattedLabels,
@@ -91,12 +82,8 @@ const HourlyChart = ({ symbol }) => {
   };
 
   return (
-    <div className="p-4">
+    <div className="h-[85%] w-[80%] mx-auto">
       <h2 className="text-2xl font-bold mb-4">{symbol} Hourly Stock Prices</h2>
-      {/* Display the date for the hourly stock data */}
-      {displayDate && (
-        <p className="text-sm font-semibold mb-2">Data for: {displayDate}</p>
-      )}
       {loading && <p>Loading stock data...</p>}
       {error && <p className="text-red-500">{error}</p>}
       {!loading && !error && hourlyStockData.length > 0 && (

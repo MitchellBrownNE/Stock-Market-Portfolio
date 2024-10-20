@@ -96,49 +96,49 @@ function Dashboard() {
   };
 
   return (
-    <>
-      <div className="h-screen  grid grid-cols-4 grid-rows-6 gap-4 p-10 font-quicksand relative bg-bgdark">
-        {/* Tesla, GM, Ford buttons */}
+    <div className=" grid grid-rows-7 gap-4 p-10 font-quicksand relative bg-bgdark">
+      {/* Tesla, GM, Ford buttons */}
+      <div className="col-span-4 grid grid-cols-3 gap-4">
         <div
-          className="col-span-1 row-span-1 text-2xl"
+          className="text-2xl text-center cursor-pointer"
           onClick={() => handleCardClick("TSLA")}
         >
           <Card>Tesla</Card>
         </div>
         <div
-          className="col-span-1 row-span-1 text-2xl"
+          className="text-2xl text-center cursor-pointer"
           onClick={() => handleCardClick("GM")}
         >
           <Card>GM</Card>
         </div>
         <div
-          className="col-span-1 row-span-1 text-2xl"
+          className="text-2xl text-center cursor-pointer"
           onClick={() => handleCardClick("F")}
         >
           <Card>Ford</Card>
         </div>
-        <div className="col-span-1 row-span-1"></div>{" "}
-        {/* Empty space to align */}
-        {/* Chart on the left side */}
-        <div className="col-span-3 row-span-7">
-          <Card>
-            {/* Button to toggle between Weekly and Daily (Hourly) Chart */}
-            <button
-              onClick={toggleChart}
-              className="bg-lightgreen font-body text-black  text-lg px-6 py-2 rounded-lg hover:bg-lightgreen focus:outline-none "
-            >
-              {isWeekly ? "Hourly Chart" : "Weekly Chart"}
-            </button>
-            {/* Conditionally render Chart based on the value of isWeekly */}
-            {isWeekly ? (
-              <Chart symbol={selectedStock} />
-            ) : (
-              <HourlyChart symbol={selectedStock} />
-            )}
-          </Card>
-        </div>
-        {/* Stock Price and Predicted Price on the right */}
-        <div className="col-span-1 row-span-1">
+      </div>
+
+      <div className="col-span-4 row-span-4  ">
+        <Card>
+          {/* Button to toggle between Weekly and Daily (Hourly) Chart */}
+          <button
+            onClick={toggleChart}
+            className="bg-lightgreen font-body text-black text-md px-6 py-2 rounded-lg hover:bg-lightgreen focus:outline-none"
+          >
+            {isWeekly ? "Hourly Chart" : "Weekly Chart"}
+          </button>
+          {isWeekly ? (
+            <Chart symbol={selectedStock} />
+          ) : (
+            <HourlyChart symbol={selectedStock} />
+          )}
+        </Card>
+      </div>
+
+      {/* Place the three boxes under the chart */}
+      <div className="col-span-4 row-span-2 grid grid-cols-3 gap-4 ">
+        <div className="col-span-1">
           <Card>
             Stock Price:{" "}
             {currentPrice !== null
@@ -146,15 +146,13 @@ function Dashboard() {
               : "Select a stock"}
           </Card>
         </div>
-        <div className="col-span-1 row-span-1">
+        <div className="col-span-1">
           <Card>
             Predicted Price:{" "}
-            {predictedPrice !== null ? `$${predictedPrice}` : "N/A"}{" "}
-            {/* Correctly using predictedPrice */}
+            {predictedPrice !== null ? `$${predictedPrice}` : "N/A"}
           </Card>
         </div>
-        {/* Details below Stock Price and Predicted Price */}
-        <div className="col-span-1 row-span-5">
+        <div className="col-span-1">
           <Card>
             {error && <div>{error}</div>}
             {stockData ? (
@@ -173,8 +171,7 @@ function Dashboard() {
           </Card>
         </div>
       </div>
-    </>
+    </div>
   );
 }
-
 export default Dashboard;

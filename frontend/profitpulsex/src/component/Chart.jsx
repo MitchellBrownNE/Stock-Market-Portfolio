@@ -72,7 +72,7 @@ const Chart = ({ symbol }) => {
   };
 
   return (
-    <div className="p-4">
+    <div className="h-[85%] w-[80%] mx-auto">
       <h2 className="text-2xl font-bold mb-4">{symbol} Stock Prices</h2>
       {loading && <p>Loading stock data...</p>}
       {error && <p className="text-red-500">{error}</p>}
