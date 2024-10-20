@@ -1,26 +1,20 @@
-# Stage 1: Build React app
 FROM node:14 AS build
-
 WORKDIR /app
 
 # Copy the frontend code
-COPY frontend/profitpulsex/package.json ./package.json
-COPY frontend/profitpulsex/vite.config.js ./vite.config.js
 COPY frontend/profitpulsex/ ./
 
 # Install dependencies and build the React app
 RUN npm install
-RUN npx vite build
+RUN npm run build
 
-# Stage 2: Set up Flask app
 FROM python:3.11.9-slim
-
 WORKDIR /app
 
 # Copy the backend code
 COPY Backend/ /app/Backend
 
-# Copy the built React app from the previous stage
+# Copy the built React app
 COPY --from=build /app /app/Frontend/profitpulsex
 
 # Copy the requirements file and install dependencies
@@ -35,4 +29,4 @@ ENV FLASK_RUN_HOST=0.0.0.0
 EXPOSE 5000
 
 # Run the Flask app
-CMD ["flask", "run"]
+CMD ["gunicorn", "-w", "1", "-b", "0.0.0.0:5000", "Backend.WebApp.app:app"]

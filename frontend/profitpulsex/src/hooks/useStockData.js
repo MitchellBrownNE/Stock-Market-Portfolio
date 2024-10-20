@@ -12,30 +12,66 @@ const useStockData = (symbol) => {
   const apiKey = "GDHSA4XERHME27FZ";
   const cacheDuration = 60 * 60 * 1000;
 
-  // Helper function to calculate the last open market day
   const getLastMarketDay = () => {
     const today = new Date();
-    // 0 = Sunday, 6 = Saturday
-    let day = today.getDay();
 
-    // Adjust the date based on weekends and before market open on weekdays
-    if (day === 0) {
-      today.setDate(today.getDate() - 2);
-    } else if (day === 6) {
-      today.setDate(today.getDate() - 1);
-    } else if (
-      day > 1 &&
-      (today.getHours() < 9 ||
-        (today.getHours() === 9 && today.getMinutes() < 30))
+    // Convert to eastern time zone
+    const localDate = new Date(
+      new Intl.DateTimeFormat("en-US", {
+        timeZone: "America/New_York",
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+      }).format(today)
+    );
+
+    // 0 = Sunday, 6 = Saturday
+    const localHour = localDate.getHours();
+    const localMinutes = localDate.getMinutes();
+    const localDay = localDate.getDay();
+
+    console.log(
+      "Today (local time):",
+      localDate.toLocaleString(),
+      "Local day:",
+      localDay,
+      "Local hour:",
+      localHour
+    );
+
+    // If its the weekend (Sat, Sun), go back to Friday;
+    if (localDay === 0) {
+      localDate.setDate(localDate.getDate() - 2);
+    } else if (localDay === 6) {
+      localDate.setDate(localDate.getDate() - 1);
+    }
+    // If Monday before market opens (before 9:30 AM), go back to Friday
+    else if (
+      localDay === 1 &&
+      (localHour < 9 || (localHour === 9 && localMinutes < 30))
     ) {
-      // If it's a weekday but before market opens, go back to the previous day
-      today.setDate(today.getDate() - 1);
+      localDate.setDate(localDate.getDate() - 3);
+    }
+    // If it's a weekday (Tuesday-Friday) but before 9:30 AM, use the previous market day
+    else if (
+      localDay >= 2 &&
+      localDay <= 5 &&
+      (localHour < 9 || (localHour === 9 && localMinutes < 30))
+    ) {
+      localDate.setDate(localDate.getDate() - 1);
+    }
+    // If Friday after market close (4:00 PM or later), keep Friday
+    else if (localDay === 5 && localHour >= 16) {
+      return localDate.toLocaleDateString("en-CA"); // Return Friday
     }
 
-    return today.toISOString().split("T")[0];
+    // If market is open, return today's date (handle for current-day data)
+    return localDate.toLocaleDateString("en-CA");
   };
 
-  // filter only the data between 9:30 AM and 4:00 PM -- market hours
+  // Filter only the data between 9:30 AM and 4:00 PM -- market hours
   const filterMarketHours = (data) => {
     return Object.keys(data)
       .filter((timestamp) => {
@@ -43,10 +79,10 @@ const useStockData = (symbol) => {
         const time = new Date(timestamp).getHours();
         const minutes = new Date(timestamp).getMinutes();
 
-        // Check if it falls within market hours (10:00 AM to 4:00 PM)
+        // Check if it falls within market hours (9:30 AM to 4:00 PM)
         return (
           date === getLastMarketDay() &&
-          ((time === 10 && minutes === 0) || (time > 10 && time <= 16))
+          ((time === 9 && minutes >= 30) || (time >= 10 && time < 16))
         );
       })
       .map((timestamp) => ({

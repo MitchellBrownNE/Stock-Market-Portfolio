@@ -1,7 +1,10 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import logo from "../assets/logo.png";
-// Adjust the path to your logo file
+
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { signOut } from 'firebase/auth'; // Import signOut function from Firebase Auth
+import { auth } from '../firebaseConfig'; // Import Firebase auth configuration
+import logo from "../assets/logo.png"; // Adjust the path to your logo file
+
 
 function Navbar() {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
@@ -14,6 +17,15 @@ function Navbar() {
   const handleMenuClick = (path) => {
     setDropdownOpen(false);
     navigate(path); // Navigate to the desired path on option click
+  };
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth); // Sign out the user
+      navigate('/login'); // Redirect to login page after logout
+    } catch (error) {
+      console.error('Error logging out:', error);
+    }
   };
 
   return (
@@ -60,9 +72,11 @@ function Navbar() {
             >
               About Us
             </li>
-            <li
-              className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-              onClick={() => handleMenuClick("/logout")}
+
+            <li 
+              className="px-4 py-2 hover:bg-gray-100 cursor-pointer" 
+              onClick={handleLogout} // Call the handleLogout function on click
+
             >
               Logout
             </li>

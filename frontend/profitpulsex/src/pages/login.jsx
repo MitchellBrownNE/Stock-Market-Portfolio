@@ -4,7 +4,6 @@ import { auth } from "../firebaseConfig";
 import { signInWithEmailAndPassword } from "firebase/auth";
 
 function Login() {
-  // State for email, password, message, and loading state
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
@@ -13,18 +12,13 @@ function Login() {
 
   const navigate = useNavigate();
 
-  // Function to log in user with Firebase Authentication
   const loginUser = async () => {
     setLoading(true);
-    setMessage(""); // Clear any previous messages
+    setMessage(""); // Clear previous messages
 
     try {
       // Firebase function to log in the user with email and password
-      const userCredential = await signInWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
 
       // Check if the email is verified
