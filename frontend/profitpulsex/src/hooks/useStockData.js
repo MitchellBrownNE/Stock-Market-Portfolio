@@ -72,7 +72,7 @@ const useStockData = (symbol) => {
         // Check if it falls within market hours (9:30 AM to 4:00 PM)
         return (
           date === getLastMarketDay() &&
-          ((time === 9 && minutes >= 30) || (time >= 10 && time < 16))
+          ((time === 9 && minutes >= 30) || (time >= 10 && time <= 16))
         );
       })
       .map((timestamp) => ({
