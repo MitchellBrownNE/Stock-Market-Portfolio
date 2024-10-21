@@ -8,7 +8,7 @@ COPY Frontend/profitpulsex/ ./
 
 # Install dependencies and build the React app
 RUN npm install
-RUN npx vite build
+RUN npm run build
 
 # Stage 2: Set up Flask app
 FROM python:3.11.9-slim
@@ -31,4 +31,4 @@ ENV FLASK_RUN_HOST=0.0.0.0
 EXPOSE 5000
 
 # Run the Flask app
-CMD ["sh", "-c", "gunicorn -w 1 -b 0.0.0.0:${PORT:-5000} Backend.WebApp.app:app"]
+CMD ["sh", "-c", "gunicorn -w 1 -b 0.0.0.0:${PORT:-5000} --timeout 120 Backend.WebApp.app:app"]
