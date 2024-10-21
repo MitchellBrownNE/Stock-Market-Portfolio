@@ -119,6 +119,7 @@ function Dashboard() {
   return (
     <div className=" grid grid-rows-7 gap-4 p-10 font-body relative bg-bgdark">
       {/* Tesla, GM, Ford buttons */}
+
       <div className="col-span-4 grid grid-cols-3 gap-4">
         <div
           className="text-2xl text-center cursor-pointer font-heading"
@@ -126,7 +127,8 @@ function Dashboard() {
         >
           <Card selected={selectedStock === "TSLA"}>
             <div>Tesla</div>
-            <div className="text-md mt-5">
+            <div className="mt-5">Current Price:</div>
+            <div className="text-md">
               {teslaPrice !== null ? `$${teslaPrice}` : "Loading..."}
             </div>
           </Card>
@@ -137,7 +139,8 @@ function Dashboard() {
         >
           <Card selected={selectedStock === "GM"}>
             <div>GM</div>
-            <div className="text-md mt-5">
+            <div className="mt-5">Current Price:</div>
+            <div className="text-md">
               {gmPrice !== null ? `$${gmPrice}` : "Loading..."}
             </div>
           </Card>
@@ -148,7 +151,8 @@ function Dashboard() {
         >
           <Card selected={selectedStock === "F"}>
             <div>Ford</div>
-            <div className="text-md mt-5">
+            <div className="mt-5">Current Price:</div>
+            <div className="text-md ">
               {fordPrice !== null ? `$${fordPrice}` : "Loading..."}
             </div>
           </Card>
