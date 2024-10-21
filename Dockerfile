@@ -28,6 +28,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Set environment variables
 ENV FLASK_APP=Backend/WebApp/app.py
 ENV FLASK_RUN_HOST=0.0.0.0
+EXPOSE 5000
 
 # Run the Flask app
-CMD ["gunicorn", "-w", "2", "-b", "0.0.0.0", "Backend.WebApp.app:app"]
+CMD ["sh", "-c", "gunicorn -w 1 -b 0.0.0.0:${PORT:-5000} Backend.WebApp.app:app"]
