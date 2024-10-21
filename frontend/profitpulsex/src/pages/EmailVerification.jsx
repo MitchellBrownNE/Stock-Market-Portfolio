@@ -7,11 +7,23 @@ function EmailVerification() {
   const [success, setSuccess] = useState(false); // Success message state
   const [error, setError] = useState(""); // Error message state
   const [resendLoading, setResendLoading] = useState(false); // Resend button loading state
+  const [resendCooldown, setResendCooldown] = useState(0); // Cooldown timer
 
-  // Simulate the email verification process
+  // Cooldown duration (e.g., 60 seconds)
+  const cooldownDuration = 60;
+
+  // Simulate the email verification process on initial load
   useEffect(() => {
     sendVerificationEmail();
   }, []);
+
+  // Handle cooldown countdown
+  useEffect(() => {
+    if (resendCooldown > 0) {
+      const timer = setTimeout(() => setResendCooldown(resendCooldown - 1), 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [resendCooldown]);
 
   // Function to send verification email
   const sendVerificationEmail = async () => {
@@ -21,14 +33,13 @@ function EmailVerification() {
       if (auth.currentUser) {
         await sendEmailVerification(auth.currentUser); // Firebase function to send verification email
         setSuccess(true);
+        setResendCooldown(cooldownDuration); // Start cooldown timer
       } else {
         setError("No user is logged in.");
       }
     } catch (err) {
       if (err.code === "auth/too-many-requests") {
-        setError(
-          "Too many requests. Please try again later or check your email spam folder."
-        );
+        setError("Too many requests. Please try again later or check your email spam folder.");
       } else {
         setError("Error sending verification email. Please try again.");
       }
@@ -38,22 +49,23 @@ function EmailVerification() {
     }
   };
 
-  // Function to handle resend
+  // Function to handle resend email
   const handleResend = async () => {
+    if (resendCooldown > 0 || resendLoading) return; // Prevent multiple resends during cooldown
+
     setResendLoading(true);
     setError("");
     try {
       if (auth.currentUser) {
         await sendEmailVerification(auth.currentUser); // Firebase resend function
         setSuccess(true);
+        setResendCooldown(cooldownDuration); // Reset cooldown timer
       } else {
         setError("No user is logged in.");
       }
     } catch (err) {
       if (err.code === "auth/too-many-requests") {
-        setError(
-          "Too many requests. Please try again later or check your email spam folder."
-        );
+        setError("Too many requests. Please try again later or check your email spam folder.");
       } else {
         setError("Error resending verification email. Please try again.");
       }
@@ -78,9 +90,7 @@ function EmailVerification() {
           </>
         ) : success ? (
           <>
-            <h2 className="text-4xl font-heading text-black">
-              Email Verification
-            </h2>
+            <h2 className="text-4xl font-heading text-black">Email Verification</h2>
             <p className="text-black mt-4">
               We have sent you a verification email. Please check your inbox and
               click the verification link.
@@ -93,11 +103,15 @@ function EmailVerification() {
             <button
               onClick={handleResend}
               className={`bg-lightgreen font-body text-black text-lg px-6 py-2 rounded-lg hover:bg-green-600 mt-4 ${
-                resendLoading ? "opacity-50 cursor-not-allowed" : ""
+                resendLoading || resendCooldown > 0 ? "opacity-50 cursor-not-allowed" : ""
               }`}
-              disabled={resendLoading}
+              disabled={resendLoading || resendCooldown > 0}
             >
-              {resendLoading ? "Resending..." : "Resend Email"}
+              {resendLoading
+                ? "Resending..."
+                : resendCooldown > 0
+                ? `Resend Email (${resendCooldown}s)`
+                : "Resend Email"}
             </button>
           </>
         ) : error ? (
@@ -107,11 +121,15 @@ function EmailVerification() {
             <button
               onClick={handleResend}
               className={`bg-lightgreen font-body text-black text-lg px-6 py-2 rounded-lg hover:bg-green-600 mt-4 ${
-                resendLoading ? "opacity-50 cursor-not-allowed" : ""
+                resendLoading || resendCooldown > 0 ? "opacity-50 cursor-not-allowed" : ""
               }`}
-              disabled={resendLoading}
+              disabled={resendLoading || resendCooldown > 0}
             >
-              {resendLoading ? "Resending..." : "Try Again"}
+              {resendLoading
+                ? "Resending..."
+                : resendCooldown > 0
+                ? `Try Again (${resendCooldown}s)`
+                : "Try Again"}
             </button>
           </>
         ) : null}
