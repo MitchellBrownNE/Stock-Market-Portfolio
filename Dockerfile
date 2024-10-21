@@ -29,8 +29,5 @@ RUN pip install --no-cache-dir -r requirements.txt
 ENV FLASK_APP=Backend/WebApp/app.py
 ENV FLASK_RUN_HOST=0.0.0.0
 
-# Expose the port Flask will run on
-EXPOSE 5000
-
 # Run the Flask app
-CMD ["gunicorn", "-w", "2", "-b", "0.0.0.0:5000", "Backend.WebApp.app:app"]
+CMD ["gunicorn", "-w", "2", "-b", "0.0.0.0", "Backend.WebApp.app:app"]

@@ -10,7 +10,7 @@ services:
     name: backend
     env: python
     buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn -w 1 -b 0.0.0.0:5000 Backend.WebApp.app:app
+    startCommand: gunicorn -w 1 -b 0.0.0.0 Backend.WebApp.app:app
     envVars:
       - key: FLASK_APP
         value: Backend/WebApp/app.py
