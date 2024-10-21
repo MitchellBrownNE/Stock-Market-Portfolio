@@ -13,7 +13,7 @@ static_folder_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..
 
 # Initialize the Flask application
 app = Flask(__name__, static_url_path='', static_folder=static_folder_path)
-CORS(app)
+CORS(app, resources={r"/*": {"origins": "*"}})
 
 # Serve the React app by setting the proper default path and returning the proper directory that is required by
 # the React frontend
