@@ -3,7 +3,7 @@ import React, { useState } from "react";
 // Function to fetch predicted price from Python API
 const fetchPredictedPrice = async (symbol) => {
   const response = await fetch(
-    `https://stock-market-portfolio-cnjw.onrender.com/api/predict?symbol=${symbol}`
+    `http://127.0.0.1:5000/api/predict?symbol=${symbol}`
   ); // Pass symbol to API
 
   if (!response.ok) {
