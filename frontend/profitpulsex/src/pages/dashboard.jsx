@@ -62,6 +62,14 @@ function Dashboard() {
   // New state to track whether the user wants the weekly or hourly chart
   const [isWeekly, setIsWeekly] = useState(true);
 
+  const [userShares, setUserShares] = useState(0); // Placeholder for user shares
+  const [predictedPriceTomorrow, setPredictedPriceTomorrow] = useState(null);
+  const [predictedPriceToday, setPredictedPriceToday] = useState(null);
+  const [predictedPriceYesterday, setPredictedPriceYesterday] = useState(null);
+  const [sentimentTomorrow, setSentimentTomorrow] = useState(0);
+  const [sentimentToday, setSentimentToday] = useState(0);
+  const [sentimentYesterday, setSentimentYesterday] = useState(0);
+
   const fetchStocks = async (symbol) => {
     try {
       // Fetch stock profile data
@@ -119,7 +127,6 @@ function Dashboard() {
   return (
     <div className=" grid grid-rows-7 gap-4 p-10 font-body relative bg-bgdark">
       {/* Tesla, GM, Ford buttons */}
-
       <div className="col-span-4 grid grid-cols-3 gap-4">
         <div
           className="text-2xl text-center cursor-pointer font-heading"
@@ -145,6 +152,7 @@ function Dashboard() {
             </div>
           </Card>
         </div>
+
         <div
           className="text-2xl text-center cursor-pointer font-heading"
           onClick={() => handleCardClick("F")}
@@ -158,7 +166,6 @@ function Dashboard() {
           </Card>
         </div>
       </div>
-
       <div className="col-span-4 row-span-4  ">
         <Card>
           {/* Button to toggle between Weekly and Daily (Hourly) Chart */}
@@ -175,8 +182,7 @@ function Dashboard() {
           )}
         </Card>
       </div>
-
-      {/* Place the three boxes under the chart */}
+      {/* Place the three boxes under the chart 
       <div className="col-span-4 row-span-2 grid grid-cols-3 gap-4 ">
         <div className="col-span-1">
           <Card>
@@ -211,7 +217,68 @@ function Dashboard() {
           </Card>
         </div>
       </div>
+      */}
+      <div className="col-span-4 row-span-2 grid grid-cols-3 gap-4 ">
+        {/* Left Box: User Portfolio */}
+        <div className="col-span-1 font-body">
+          <Card>
+            <div className="font-heading text-lg">
+              User Portfolio: {selectedStock} <br />
+            </div>
+            <div className="font-body mt-10">
+              Shares Owned: {userShares !== null ? userShares : 0} <br />
+              Total Value:
+            </div>
+            {/* Placeholder for shares */}
+          </Card>
+        </div>
+
+        {/* Middle Box: Prediction Values */}
+        <div className="col-span-1">
+          <Card>
+            <p className="font-heading text-lg">Predicted Price:</p>
+            <ul className="font-body mt-10">
+              <li>
+                Tomorrow:{" "}
+                {predictedPriceTomorrow !== null
+                  ? `$${predictedPriceTomorrow}`
+                  : "$0"}
+              </li>
+              <li>
+                Today:{" "}
+                {predictedPriceToday !== null
+                  ? `$${predictedPriceToday}`
+                  : "$0"}
+              </li>
+              <li>
+                Yesterday:{" "}
+                {predictedPriceYesterday !== null
+                  ? `$${predictedPriceYesterday}`
+                  : "$0"}
+              </li>
+            </ul>
+          </Card>
+        </div>
+
+        {/* Right Box: Sentiment Analysis */}
+        <div className="col-span-1">
+          <Card>
+            <p className="font-heading text-lg">Sentiment Analysis Score:</p>
+            <ul className="font-body mt-10">
+              <li>
+                Tomorrow: {sentimentTomorrow !== null ? sentimentTomorrow : 0}
+              </li>
+              <li>Today: {sentimentToday !== null ? sentimentToday : 0}</li>
+              <li>
+                Yesterday:{" "}
+                {sentimentYesterday !== null ? sentimentYesterday : 0}
+              </li>
+            </ul>
+          </Card>
+        </div>
+      </div>
     </div>
   );
 }
+
 export default Dashboard;
