@@ -3,11 +3,14 @@ import StarterPage from "./pages/startingPage";
 import RegisterPage from "./pages/register";
 import LoginPage from "./pages/login";
 import Dashboard from "./pages/dashboard";
+import Profile from "./pages/Profile"; 
+import Settings from "./pages/Settings";
+import About from "./pages/About";  
 import Navbar from './component/Navbar';
 import ForgotPassword from "./pages/ForgotPassword";
-import AuthAction from "./pages/AuthAction";  // Correct import with the same case
-import EmailVerification from './pages/EmailVerification'; // Import the EmailVerification component
-import ProtectedRoute from './component/ProtectedRoute'; // Import the ProtectedRoute component
+import AuthAction from "./pages/AuthAction";  
+import EmailVerification from './pages/EmailVerification';  
+import ProtectedRoute from './component/ProtectedRoute';  
 
 function AppContent() {
   const location = useLocation();
@@ -17,8 +20,8 @@ function AppContent() {
     "/register",
     "/",
     "/forgot-password",
-    "/AuthAction", // Fix: added comma
-    "/verify-email" // Fix: added correct path
+    "/AuthAction", 
+    "/verify-email"
   ];
 
   const showNavbar = !hideNavbarRoutes.includes(location.pathname);
@@ -43,6 +46,11 @@ function AppContent() {
             </ProtectedRoute>
           } 
         />
+        
+        {/* New routes for the pages */}
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/settings" element={<Settings />} />
+        <Route path="/about" element={<About />} />
       </Routes>
     </>
   );
