@@ -41,36 +41,26 @@ const useStockData = (symbol) => {
       localHour
     );
 
-    // If its the weekend (Sat, Sun), go back to Friday;
-    if (localDay === 0) {
-      localDate.setDate(localDate.getDate() - 2);
-    } else if (localDay === 6) {
-      localDate.setDate(localDate.getDate() - 1);
-    }
-    // If Monday before market opens (before 9:30 AM), go back to Friday
-    else if (
-      localDay === 1 &&
-      (localHour < 9 || (localHour === 9 && localMinutes < 30))
-    ) {
+    // If it's Monday, go back to Friday
+    if (localDay === 1) {
       localDate.setDate(localDate.getDate() - 3);
     }
-    // If it's a weekday (Tuesday-Friday) but before 9:30 AM, use the previous market day
-    else if (
-      localDay >= 2 &&
-      localDay <= 5 &&
-      (localHour < 9 || (localHour === 9 && localMinutes < 30))
-    ) {
+    // If it's Sunday, go back to Friday
+    else if (localDay === 0) {
+      localDate.setDate(localDate.getDate() - 2);
+    }
+    // If it's Saturday, go back to Friday
+    else if (localDay === 6) {
       localDate.setDate(localDate.getDate() - 1);
     }
-    // If Friday after market close (4:00 PM or later), keep Friday
-    else if (localDay === 5 && localHour >= 16) {
-      return localDate.toLocaleDateString("en-CA"); // Return Friday
+    // For Tuesday to Friday, go back to the previous day
+    else {
+      localDate.setDate(localDate.getDate() - 1);
     }
 
-    // If market is open, return today's date (handle for current-day data)
+    // Return the previous market day
     return localDate.toLocaleDateString("en-CA");
   };
-
   // Filter only the data between 9:30 AM and 4:00 PM -- market hours
   const filterMarketHours = (data) => {
     return Object.keys(data)
@@ -82,7 +72,7 @@ const useStockData = (symbol) => {
         // Check if it falls within market hours (9:30 AM to 4:00 PM)
         return (
           date === getLastMarketDay() &&
-          ((time === 9 && minutes >= 30) || (time >= 10 && time < 16))
+          ((time === 9 && minutes >= 30) || (time >= 10 && time <= 16))
         );
       })
       .map((timestamp) => ({
@@ -122,7 +112,7 @@ const useStockData = (symbol) => {
       const response = await axios.get(
         `https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=${symbol}&interval=60min&apikey=${apiKey}`
       );
-
+      console.log("here is the", response.data);
       if (!response.data["Time Series (60min)"]) {
         throw new Error(`API response invalid for ${symbol}`);
       }
