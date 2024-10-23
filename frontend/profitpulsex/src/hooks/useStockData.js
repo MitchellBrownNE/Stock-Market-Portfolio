@@ -10,7 +10,7 @@ const useStockData = (symbol) => {
   const [error, setError] = useState(null);
 
   const apiKey = "GDHSA4XERHME27FZ";
-  const cacheDuration = 60 * 60 * 1000;
+  const cacheDuration = 24 * 60 * 60 * 1000;
 
   const getLastMarketDay = () => {
     const today = new Date();
