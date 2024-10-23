@@ -59,7 +59,7 @@ function AppContent() {
 function App() {
   return (
     <Router>
-      <AppContent />
+      <Dashboard />
     </Router>
   );
 }

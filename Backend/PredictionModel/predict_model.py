@@ -1,13 +1,20 @@
 from . import stock_api
 from . import preprocessing
-from .lstm_model import LSTMmodel
 from .transformer_model import TransformerModel
 import json
+from .lstm_model import LSTMmodel  # Relative import
+
 
 # Stock tickers
 tickers = ["TSLA"]
 
 class PredictionModel:
+    def __init__(self, X_train, y_train, X_test=None):
+        self.model = LSTMmodel(X_train, y_train, X_test)
+
+    def predict(self, X):
+        return self.model.predict(X)
+    
     def __init__(self, tickers):
         self.tickers = tickers
         self.stock_predictions = {}
