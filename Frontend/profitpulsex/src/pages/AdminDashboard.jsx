@@ -1,10 +1,10 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Card from "../component/card";
 
 // Function to fetch predicted price from Python API
 const fetchPredictedPrice = async (symbol) => {
     const response = await fetch(
-      `https://stock-market-portfolio-cnjw.onrender.com/api/predict?symbol=${symbol}`
+      `http://127.0.0.1:5000/api/predict?symbol=${symbol}`
     ); // Pass symbol to API
   
     if (!response.ok) {
@@ -15,7 +15,7 @@ const fetchPredictedPrice = async (symbol) => {
     return data.predicted_price;
   };
 
-function adminDashboard(){
+function AdminDashboard(){
     const [predictedPrice, setPredictedPrice] = useState(null); // State for predicted price
 
 
@@ -38,14 +38,12 @@ function adminDashboard(){
 
   
   return (
-    <div className="min-h-screen flex flex-col justify-center items-center bg-bgdark">
-      <div className="w-full max-w-md p-8 rounded-sm shadow-lg bg-white">
-        <h2 className="text-4xl font-heading text-center mb-8 text-black">About Us</h2>
-        <p className="text-black">This is the About Us page content.</p>
-      </div>
+    <div>
+      <button className = "mt-10 bg-lightgreen" onClick={() => fetchPredictions("TSLA")}>Fetch Predictions</button>
+      {predictedPrice && <p>Predicted Price: {predictedPrice}</p>}
     </div>
   );
 
 }
 
-export default adminDashboard;
+export default AdminDashboard;

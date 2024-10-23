@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route, useLocation } from "react-route
 import StarterPage from "./pages/startingPage";
 import RegisterPage from "./pages/register";
 import LoginPage from "./pages/login";
+import AdminDashboard from "./pages/AdminDashboard";
 import Dashboard from "./pages/dashboard";
 import Profile from "./pages/Profile"; 
 import Settings from "./pages/Settings";
@@ -48,6 +49,7 @@ function AppContent() {
         />
         
         {/* New routes for the pages */}
+        <Route path="/admindashboard" element={<AdminDashboard />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/settings" element={<Settings />} />
         <Route path="/about" element={<About />} />
