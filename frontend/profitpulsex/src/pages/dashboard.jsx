@@ -50,21 +50,21 @@ const fetchPredictedPrice = async (symbol) => {
 
 function Dashboard() {
   const [stockData, setStockData] = useState(null);
-  const [currentPrice, setCurrentPrice] = useState(null); 
-  const [priceChange, setPriceChange] = useState(null); 
+  const [currentPrice, setCurrentPrice] = useState(null);
+  const [priceChange, setPriceChange] = useState(null);
   const [percentChange, setPercentChange] = useState(null);
   const [predictedPrice, setPredictedPrice] = useState(null);
   const [teslaPrice, setTeslaPrice] = useState(null);
   const [gmPrice, setGmPrice] = useState(null);
   const [fordPrice, setFordPrice] = useState(null);
   const [error, setError] = useState(null);
-  const [ticker, setTicker] = useState('');
+  const [ticker, setTicker] = useState("");
   const [sentimentData, setSentimentData] = useState(null);
-  const [selectedStock, setSelectedStock] = useState('');
+  const [selectedStock, setSelectedStock] = useState("TSLA");
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [isWeekly, setIsWeekly] = useState(true);
-  const [userShares, setUserShares] = useState(0); 
+  const [userShares, setUserShares] = useState(0);
   const [predictedPriceTomorrow, setPredictedPriceTomorrow] = useState(null);
   const [predictedPriceToday, setPredictedPriceToday] = useState(null);
   const [predictedPriceYesterday, setPredictedPriceYesterday] = useState(null);
@@ -72,15 +72,14 @@ function Dashboard() {
   const [sentimentToday, setSentimentToday] = useState(0);
   const [sentimentYesterday, setSentimentYesterday] = useState(0);
 
-
   const fetchSentimentData = async (symbol) => {
     try {
-      const response = await fetch('http://127.0.0.1:5001/api/sentiment', {
-        method: 'POST',
+      const response = await fetch("http://127.0.0.1:5001/api/sentiment", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify({ ticker: symbol })
+        body: JSON.stringify({ ticker: symbol }),
       });
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -88,31 +87,32 @@ function Dashboard() {
       const data = await response.json();
       setSentimentData(data);
     } catch (error) {
-      console.error('Error fetching sentiment data:', error);
+      console.error("Error fetching sentiment data:", error);
       setSentimentData({ error: "Failed to fetch sentiment data" });
     }
   };
 
   const calculateSentimentDetails = (sentiments) => {
     if (!sentiments || sentiments.length === 0) {
-      return { averageScore: 0, predominantSentiment: 'Neutral' };
+      return { averageScore: 0, predominantSentiment: "Neutral" };
     }
 
     let totalScore = 0;
     let sentimentCounts = {};
 
-    sentiments.forEach(sentiment => {
+    sentiments.forEach((sentiment) => {
       totalScore += sentiment.score;
       if (sentiment.label) {
-        sentimentCounts[sentiment.label] = (sentimentCounts[sentiment.label] || 0) + 1;
+        sentimentCounts[sentiment.label] =
+          (sentimentCounts[sentiment.label] || 0) + 1;
       }
     });
 
     const averageScore = totalScore / sentiments.length;
 
-    let predominantSentiment = 'Neutral';
+    let predominantSentiment = "Neutral";
     let maxCount = 0;
-    Object.keys(sentimentCounts).forEach(label => {
+    Object.keys(sentimentCounts).forEach((label) => {
       if (sentimentCounts[label] > maxCount) {
         maxCount = sentimentCounts[label];
         predominantSentiment = label;
@@ -125,7 +125,7 @@ function Dashboard() {
   const handleCardClick = (symbol) => {
     setSelectedStock(symbol);
     fetchStocks(symbol);
-    fetchSentimentData(symbol);  
+    fetchSentimentData(symbol);
   };
 
   const fetchStocks = async (symbol) => {
@@ -221,13 +221,19 @@ function Dashboard() {
           >
             {isWeekly ? "Hourly Chart" : "Weekly Chart"}
           </button>
-          {isWeekly ? <Chart symbol={selectedStock} /> : <HourlyChart symbol={selectedStock} />}
+          {isWeekly ? (
+            <Chart symbol={selectedStock} />
+          ) : (
+            <HourlyChart symbol={selectedStock} />
+          )}
         </Card>
       </div>
       <div className="col-span-4 row-span-2 grid grid-cols-3 gap-4">
         <div className="col-span-1 font-body">
           <Card>
-            <div className="font-heading text-lg">User Portfolio: {selectedStock}</div>
+            <div className="font-heading text-lg">
+              User Portfolio: {selectedStock}
+            </div>
             <div className="font-body mt-10">
               Shares Owned: {userShares !== null ? userShares : 0} <br />
               Total Value:
@@ -238,21 +244,52 @@ function Dashboard() {
           <Card>
             <p className="font-heading text-lg">Predicted Price:</p>
             <ul className="font-body mt-10">
-              <li>Tomorrow: {predictedPriceTomorrow !== null ? `$${predictedPriceTomorrow}` : "$0"}</li>
-              <li>Today: {predictedPriceToday !== null ? `$${predictedPriceToday}` : "$0"}</li>
-              <li>Yesterday: {predictedPriceYesterday !== null ? `$${predictedPriceYesterday}` : "$0"}</li>
+              <li>
+                Tomorrow:{" "}
+                {predictedPriceTomorrow !== null
+                  ? `$${predictedPriceTomorrow}`
+                  : "$0"}
+              </li>
+              <li>
+                Today:{" "}
+                {predictedPriceToday !== null
+                  ? `$${predictedPriceToday}`
+                  : "$0"}
+              </li>
+              <li>
+                Yesterday:{" "}
+                {predictedPriceYesterday !== null
+                  ? `$${predictedPriceYesterday}`
+                  : "$0"}
+              </li>
             </ul>
           </Card>
         </div>
         <div className="col-span-1">
           <Card>
-            <p className="font-heading text-lg">Sentiment Analysis Score for {selectedStock}:</p>
+            <p className="font-heading text-lg">
+              Sentiment Analysis Score for {selectedStock}:
+            </p>
             <div className="font-body mt-10">
               {sentimentData && sentimentData.sentiments ? (
                 <div>
-                  <p>Average Score: {calculateSentimentDetails(sentimentData.sentiments).averageScore.toFixed(2)}</p>
-                  <p>Predominant Sentiment: {calculateSentimentDetails(sentimentData.sentiments).predominantSentiment}</p>
-                  <p className="text-sm mt-2 text-blue-600 cursor-pointer" onClick={() => setIsModalOpen(true)}>
+                  <p>
+                    Average Score:{" "}
+                    {calculateSentimentDetails(
+                      sentimentData.sentiments
+                    ).averageScore.toFixed(2)}
+                  </p>
+                  <p>
+                    Predominant Sentiment:{" "}
+                    {
+                      calculateSentimentDetails(sentimentData.sentiments)
+                        .predominantSentiment
+                    }
+                  </p>
+                  <p
+                    className="text-sm mt-2 text-blue-600 cursor-pointer"
+                    onClick={() => setIsModalOpen(true)}
+                  >
                     Click for article details
                   </p>
                 </div>
@@ -265,34 +302,50 @@ function Dashboard() {
       </div>
 
       {/* Modal for article details */}
-{isModalOpen && (
-  <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0', borderBottom: '1px solid #ccc' }}>
-      <h3 style={{ fontSize: '1.5rem', fontWeight: 'bold', margin: 0 }}>Article Headlines for {selectedStock}</h3>
-      <button
-        onClick={() => setIsModalOpen(false)}
-        style={{ fontSize: '1.5rem', border: 'none', background: 'transparent', cursor: 'pointer' }}
-      >
-        X
-      </button>
-    </div>
-    <div style={{ paddingTop: '10px' }}>
-      {sentimentData && sentimentData.sentiments ? (
-        <ul>
-          {sentimentData.sentiments.map((article, index) => (
-            <li key={index} style={{ marginBottom: '10px' }}>
-              <strong>{article.title}</strong> - Score: {article.score.toFixed(2)}, Sentiment: {article.sentiment}
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p>No articles available</p>
+      {isModalOpen && (
+        <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              padding: "10px 0",
+              borderBottom: "1px solid #ccc",
+            }}
+          >
+            <h3 style={{ fontSize: "1.5rem", fontWeight: "bold", margin: 0 }}>
+              Article Headlines for {selectedStock}
+            </h3>
+            <button
+              onClick={() => setIsModalOpen(false)}
+              style={{
+                fontSize: "1.5rem",
+                border: "none",
+                background: "transparent",
+                cursor: "pointer",
+              }}
+            >
+              X
+            </button>
+          </div>
+          <div style={{ paddingTop: "10px" }}>
+            {sentimentData && sentimentData.sentiments ? (
+              <ul>
+                {sentimentData.sentiments.map((article, index) => (
+                  <li key={index} style={{ marginBottom: "10px" }}>
+                    <strong>{article.title}</strong> - Score:{" "}
+                    {article.score.toFixed(2)}, Sentiment: {article.sentiment}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p>No articles available</p>
+            )}
+          </div>
+        </Modal>
       )}
-    </div>
-  </Modal>
-)}
 
-{/* Place the three boxes under the chart 
+      {/* Place the three boxes under the chart 
       <div className="col-span-4 row-span-2 grid grid-cols-3 gap-4 ">
         <div className="col-span-1">
           <Card>
@@ -328,7 +381,6 @@ function Dashboard() {
         </div>
       </div>
       */}
-      
     </div>
   );
 }
