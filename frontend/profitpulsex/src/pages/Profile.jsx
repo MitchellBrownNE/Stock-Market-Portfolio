@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { auth } from "../firebaseConfig"; // Ensure Firebase is correctly imported
+import { auth, db } from "../firebaseConfig"; // Ensure Firebase and Firestore are correctly imported
+import { doc, setDoc, getDoc } from "firebase/firestore"; // Firestore functions for saving and fetching data
 
 function Profile() {
   const [firstName, setFirstName] = useState("");
@@ -9,19 +10,51 @@ function Profile() {
   const [savedName, setSavedName] = useState("");
 
   useEffect(() => {
-    // Fetch the authenticated user's email from Firebase
+    // Fetch the authenticated user's email and saved profile info from Firestore
     if (auth.currentUser) {
       setEmail(auth.currentUser.email);
+      fetchUserProfile(); // Fetch user's saved profile info
     }
   }, []);
 
-  const handleSave = () => {
+  // Function to save user profile to Firestore
+  const handleSave = async () => {
     const fullName = `${firstName} ${lastName}`;
     setSavedName(fullName);
-    // Save the user's input (You can connect this to Firebase database to store the user's info)
-    console.log("First Name:", firstName);
-    console.log("Last Name:", lastName);
-    console.log("Phone:", phone);
+    
+    try {
+      // Save the user's profile info in Firestore under their UID
+      const userRef = doc(db, "users", auth.currentUser.uid);
+      await setDoc(userRef, {
+        firstName,
+        lastName,
+        phone,
+        email: auth.currentUser.email, // Store their email
+      });
+      console.log("User profile saved successfully!");
+    } catch (error) {
+      console.error("Error saving user profile:", error);
+    }
+  };
+
+  // Function to fetch user profile from Firestore
+  const fetchUserProfile = async () => {
+    try {
+      const userRef = doc(db, "users", auth.currentUser.uid);
+      const userSnap = await getDoc(userRef);
+      if (userSnap.exists()) {
+        const userData = userSnap.data();
+        setFirstName(userData.firstName || "");
+        setLastName(userData.lastName || "");
+        setPhone(userData.phone || "");
+        setSavedName(`${userData.firstName} ${userData.lastName}`);
+        console.log("User profile fetched successfully!");
+      } else {
+        console.log("No profile data found for user.");
+      }
+    } catch (error) {
+      console.error("Error fetching user profile:", error);
+    }
   };
 
   return (
