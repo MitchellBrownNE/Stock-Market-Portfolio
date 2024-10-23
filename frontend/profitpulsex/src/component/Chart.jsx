@@ -27,10 +27,10 @@ const Chart = ({ symbol }) => {
   const { stockData, loading, error } = useStockData(symbol);
 
   // place holder prediction data
-  const predictionData = stockData.map((data, index) => ({
-    ...data,
-    close: (parseFloat(data.close) * 1.01).toFixed(2),
-  }));
+  // const predictionData = stockData.map((data, index) => ({
+  //   ...data,
+  //   close: (parseFloat(data.close) * 1.01).toFixed(2),
+  // }));
 
   const options = {
     responsive: true,
@@ -46,7 +46,7 @@ const Chart = ({ symbol }) => {
   };
 
   const reversedStockData = [...stockData].reverse();
-  const reversedPredictionData = [...predictionData].reverse();
+  // const reversedPredictionData = [...predictionData].reverse();
 
   const data = {
     labels: reversedStockData.map((data) => data.date),
@@ -61,12 +61,12 @@ const Chart = ({ symbol }) => {
       },
       {
         label: "Predicted Closing Prices",
-        data: reversedPredictionData.map((data) => data.close),
+        //   data: reversedPredictionData.map((data) => data.close),
         borderColor: "rgba(255, 99, 132, 1)",
         backgroundColor: "rgba(255, 99, 132, 0.2)",
         borderDash: [5, 5],
-        tension: 0.3,
-        fill: false,
+        //   tension: 0.3,
+        //   fill: false,
       },
     ],
   };

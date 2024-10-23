@@ -27,10 +27,10 @@ const HourlyChart = ({ symbol }) => {
   const { hourlyStockData, loading, error } = useStockData(symbol);
 
   // Placeholder prediction data
-  const predictionHourlyData = hourlyStockData.map((data) => ({
-    ...data,
-    close: (parseFloat(data.close) * 1.001).toFixed(2),
-  }));
+  // const predictionHourlyData = hourlyStockData.map((data) => ({
+  //   ...data,
+  //   close: (parseFloat(data.close) * 1.01).toFixed(2),
+  // }));
 
   const options = {
     responsive: true,
@@ -48,7 +48,7 @@ const HourlyChart = ({ symbol }) => {
 
   // Reverse the stock data to ensure it goes from oldest to newest
   const reversedHourlyStockData = [...hourlyStockData].reverse();
-  const reversedPredictionHourlyData = [...predictionHourlyData].reverse();
+  // const reversedPredictionHourlyData = [...predictionHourlyData].reverse();
 
   // Format time stamps
   const formattedLabels = reversedHourlyStockData.map((data) =>
@@ -81,12 +81,12 @@ const HourlyChart = ({ symbol }) => {
       },
       {
         label: "Predicted Closing Prices (Hourly)",
-        data: reversedPredictionHourlyData.map((data) => data.close),
+        //   data: reversedPredictionHourlyData.map((data) => data.close),
         borderColor: "rgba(255, 99, 132, 1)",
         backgroundColor: "rgba(255, 99, 132, 0.2)",
         borderDash: [5, 5],
-        tension: 0.3,
-        fill: false,
+        //   tension: 0.3,
+        //   fill: false,
       },
     ],
   };
