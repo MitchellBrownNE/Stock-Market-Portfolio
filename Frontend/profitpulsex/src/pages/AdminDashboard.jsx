@@ -12,21 +12,24 @@ const fetchPredictedPrice = async (symbol) => {
     }
   
     const data = await response.json();
-    return data.predicted_price;
+    return data;
   };
 
 function AdminDashboard(){
-    const [predictedPrice, setPredictedPrice] = useState(null); // State for predicted price
+    const [lstm_predicted_price, setLSTMPredictedPrice] = useState(null); // State for predicted price
+    const [transformer_predicted_price, setTransformerPredictedPrice] = useState(null);
 
 
     const fetchPredictions = async (symbol) => {
         try {
           // Fetch predicted stock price from the Python backend
-          const predictedPrice = await fetchPredictedPrice(symbol); // Pass symbol to fetch predicted price
-          setPredictedPrice(predictedPrice); // Set predicted price
+          const prediction_data = await fetchPredictedPrice(symbol); // Pass symbol to fetch predicted price
+          setLSTMPredictedPrice(prediction_data.lstm_predicted_price); // Set lstm predicted price
+          setTransformerPredictedPrice(prediction_data.transformer_predicted_price); // set transformer predicted price
         } catch (err) {
           setError("Failed to fetch stock data.");
-          setPredictedPrice(null); // Clear predicted price on error
+          setLSTMPredictedPrice(null); // Clear predicted price on error
+          setTransformerPredictedPrice(null);
         }
       };
 

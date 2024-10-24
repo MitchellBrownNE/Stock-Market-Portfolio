@@ -5,8 +5,8 @@ import sys
 import json
 
 # Set system path for the backend file to get the models
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../Backend')))
-from PredictionModel import predict_model
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../PredictionModel')))
+import predict_model
 
 # Adjust the path to the static folder based on the main directory on Render
 static_folder_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../Frontend/profitpulsex/dist'))
