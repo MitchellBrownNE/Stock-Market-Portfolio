@@ -28,6 +28,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Set environment variables
 ENV FLASK_APP=Backend/WebApp/app.py
 ENV FLASK_RUN_HOST=0.0.0.0
+ENV TF_CPP_MIN_LOG_LEVEL=2
 EXPOSE 5000
 
 # Run the Flask app

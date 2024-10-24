@@ -50,7 +50,7 @@ def predict():
 
     return jsonify({
         "symbol": symbol,
-        "predicted_price": preds[symbol]["lstm_predictions"][0]
+        "predicted_price": preds[symbol]["lstm_predictions"]
     })
 
 if __name__ == "__main__":

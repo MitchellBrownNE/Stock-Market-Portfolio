@@ -25,7 +25,7 @@ def DownloadData(ticker):
     end = datetime.now()
     # Need to make it so it will just be 1yr and 8months previous instead of subtracting to avoid
     # negative numbers.
-    start = datetime(end.year - 1, end.month - 8, end.day)
+    start = datetime(end.year - 1, end.month, end.day)
 
     stock = Stock(ticker)
     stock_data = stock.download_data(start=start, end=end)
